@@ -123,8 +123,8 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
       let handleSpan2: Double = handleSpan / 2
       let dividerPos = (store.position * span).clamped(to: 0...span)
       let primarySpan = dividerPos - handleSpan2
-      let secondarySpan = span - primarySpan - handleSpan
       let primaryAndHandleSpan = primarySpan + handleSpan
+      let secondarySpan = span - primaryAndHandleSpan
 
       let primaryFrame: CGSize = orientation.horizontal
       ? .init(width: panesVisible.secondary ? primarySpan : span, height: height)
@@ -165,7 +165,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
 
         dividerContent()
           .position(dividerPt)
-          .zIndex(panesVisible.both ? 1 : -1)
+          .zIndex(panesVisible.both ? 1 : -2)
           .onTapGesture(count: 2) {
             if constraints.dragToHide.contains(.primary) {
               store.send(.updatePanesVisibility(.secondary))
@@ -320,7 +320,7 @@ struct SplitView_Previews: PreviewProvider {
         constraints: .init(
           minPrimaryFraction: 0.3,
           minSecondaryFraction: 0.3,
-          dragToHide: .secondary,
+          dragToHide: .both,
           visibleSpan: 4
         )
       )) { SplitViewReducer() },

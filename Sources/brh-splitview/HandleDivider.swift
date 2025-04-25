@@ -39,6 +39,8 @@ struct HandleDivider: View {
           .fill(dividerColor)
           .frame(width: dividerConstraints.visibleSpan)
           .padding(0)
+          .contentShape(.interaction, Rectangle())
+          .frame(width: handleWidth * 2)
 
         RoundedRectangle(cornerRadius: handleWidth / 2)
           .fill(handleColor)
@@ -58,6 +60,8 @@ struct HandleDivider: View {
           .fill(dividerColor)
           .frame(height: dividerConstraints.visibleSpan)
           .padding(0)
+          .contentShape(.interaction, Rectangle())
+          .frame(height: handleWidth * 2)
 
         RoundedRectangle(cornerRadius: handleWidth / 2)
           .fill(handleColor)
