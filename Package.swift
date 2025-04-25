@@ -4,21 +4,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "brh-splitview",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "brh-splitview",
-            targets: ["brh-splitview"]),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "brh-splitview"),
-        .testTarget(
-            name: "brh-splitviewTests",
-            dependencies: ["brh-splitview"]
-        ),
-    ]
+  name: "brh-splitview",
+  platforms: [.iOS(.v18), .macOS(.v15)],
+  products: [
+    .library(name: "brh-splitview", targets: ["brh-splitview"])
+  ],
+  dependencies: [
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.17.0"),
+  ],
+  targets: [
+    .target(
+      name: "brh-splitview",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+      ]
+    ),
+    .testTarget(
+      name: "brh-splitviewTests",
+      dependencies: ["brh-splitview"]
+    ),
+  ]
 )
