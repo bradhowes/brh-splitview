@@ -10,14 +10,15 @@ public struct SplitViewReducer {
   public struct State: Equatable {
     /// The currently visible child panes
     public var panesVisible: SplitViewPanes
-    /// The normalized position of the divider [0.0-1.0]
+    /// The normalized position of the divider [0.0-1.0] where 0.0 is all the way to the left/up, and 1.0 is all the
+    /// way to the right/down
     public var position: Double
     /// Any child pane to blur while dragging to signal that the child pane will close if dragging is
     /// stopped at the current position.
     public var highlightPane: SplitViewPanes = []
-    // Drag-gesture state. Unable to move into a @GestureState struct since its lifetime is not long enough to be
-    // useful.
+    /// Initial position of a drag gesture
     @ObservationStateIgnored public var initialPosition: Double?
+    /// The last position before the start of a drag gesture.
     @ObservationStateIgnored public var lastPosition: Double = .zero
 
     public init(
@@ -29,11 +30,16 @@ public struct SplitViewReducer {
     }
   }
 
+  public struct DragState: Equatable {
+    let config: SplitViewConfiguration
+    let span: Double
+    let change: Double
+  }
+
   public enum Action: Equatable {
     case delegate(Delegate)
     case doubleClicked(config: SplitViewConfiguration)
-    case dragOnChanged(config: SplitViewConfiguration, gesture: DragGesture.Value, span: Double,
-                       change: KeyPath<DragGesture.Value, CGFloat>)
+    case dragOnChanged(dragState: DragState)
     case dragOnEnded(config: SplitViewConfiguration)
     case updatePanesVisibility(SplitViewPanes)
   }
@@ -50,9 +56,7 @@ public struct SplitViewReducer {
       switch action {
       case .delegate: return .none
       case let .doubleClicked(config): return doubleClicked(&state, config: config)
-      case let .dragOnChanged(config, gesture, span, keyPath): return dragOnChanged(
-        &state, config: config, gesture: gesture, span: span, change: keyPath
-      )
+      case let .dragOnChanged(dragState): return dragOnChanged(&state, dragState: dragState)
       case let .dragOnEnded(config): return dragOnEnded(&state, config: config)
       case let .updatePanesVisibility(visible): return updateVisiblePanes(&state, panes: visible)
       }
@@ -68,41 +72,22 @@ public struct SplitViewReducer {
     return .none
   }
 
-  private func dragBegin(_ state: inout State, span: Double) -> Effect<Action> {
-    state.lastPosition = state.position
-    state.initialPosition = span * state.position
-    return .none
-  }
-
-  private func dragEnd(_ state: inout State, position: Double, visible: SplitViewPanes) -> Effect<Action> {
-    state.initialPosition = nil
-    state.highlightPane = []
-    state.position = position
-    return updateVisiblePanes(&state, panes: visible)
-  }
-
   private func dragMove(_ state: inout State, position: Double, willHide: SplitViewPanes) -> Effect<Action> {
     state.position = position
     state.highlightPane = willHide
     return .none
   }
 
-  private func dragOnChanged(
-    _ state: inout State,
-    config: SplitViewConfiguration,
-    gesture: DragGesture.Value,
-    span: Double,
-    change: KeyPath<DragGesture.Value, CGFloat>
-  ) -> Effect<Action> {
+  private func dragOnChanged(_ state: inout State, dragState: DragState) -> Effect<Action> {
     if let initialPosition = state.initialPosition {
       // Calculate new normalized position [0.0-1.0] of the divider
-      let unconstrained = (initialPosition + gesture[keyPath: change]).clamped(to: 0...span) / span
+      let unconstrained = (initialPosition + dragState.change).normalize(in: 0...dragState.span)
       // Constrain the above so that it obeys the configured constraints
-      let position = unconstrained.clamped(to: config.dragBounds)
-      if position < config.draggableRange.lowerBound {
+      let position = unconstrained.clamped(to: dragState.config.dragBounds)
+      if position < dragState.config.draggableRange.lowerBound {
         // Highlight the primary pane will be closed if the drag ends
         state.highlightPane = .primary
-      } else if position > config.draggableRange.upperBound {
+      } else if position > dragState.config.draggableRange.upperBound {
         // Highlight the secondary pane will be closed if the drag ends
         state.highlightPane = .secondary
       } else {
@@ -111,7 +96,7 @@ public struct SplitViewReducer {
       state.position = position
     } else {
       state.lastPosition = state.position
-      state.initialPosition = span * state.position
+      state.initialPosition = dragState.span * state.position
     }
     return .none
   }
@@ -120,18 +105,17 @@ public struct SplitViewReducer {
     state.initialPosition = nil
     state.highlightPane = []
     if state.position < config.draggableRange.lowerBound {
-      // Dragged below the draggableRange so close the primary child view pane
-      state.position = state.lastPosition
-      return updateVisiblePanes(&state, panes: .secondary)
+      return updatePosition(&state, position: state.lastPosition, panes: .secondary)
     } else if state.position > config.draggableRange.upperBound {
-      // Dragged above the draggableRange so close the secondary child view pane
-      state.position = state.lastPosition
-      return updateVisiblePanes(&state, panes: .primary)
+      return updatePosition(&state, position: state.lastPosition, panes: .primary)
     } else {
-      // Not closing anything -- just update the new divider position.
-      state.position = state.position.clamped(to: config.draggableRange)
-      return .none
+      return updatePosition(&state, position: state.position.clamped(to: config.draggableRange), panes: .both)
     }
+  }
+
+  private func updatePosition(_ state: inout State, position: Double, panes: SplitViewPanes) -> Effect<Action> {
+    state.position = position
+    return updateVisiblePanes(&state, panes: panes)
   }
 
   private func updateVisiblePanes(_ state: inout State, panes: SplitViewPanes) -> Effect<Action> {
@@ -242,7 +226,7 @@ extension SplitView {
   private func drag(in span: Double, change: KeyPath<DragGesture.Value, CGFloat>) -> some Gesture {
     return DragGesture(coordinateSpace: .global)
       .onChanged { gesture in
-        store.send(.dragOnChanged(config: config, gesture: gesture, span: span, change: change))
+        store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: gesture[keyPath: change])))
       }
       .onEnded { _ in
         store.send(.dragOnEnded(config: config))
