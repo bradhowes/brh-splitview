@@ -7,7 +7,7 @@
 
 This is a custom SwiftUI view that manages the layout of two child views ("panes") by the position of a third 
 "divider" view. Uses the excellent 
-[Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) for Swift by
+[Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) (TCA) for Swift by
 [Point-Free](https://www.pointfree.co) for handling state.
 
 The three views are provided to a [SplitView](Sources/brh-splitview/SplitViewFeature.swift) instance via SwiftUI
@@ -70,3 +70,11 @@ The source currently contains three divider views:
   configurable.
 * [Handle](Sources/brh-splitview/Dividers/Handle.swift) -- draws a solid line as well as a handle that serves as a 
   visual hint that the divider can be dragged by the user.
+
+# Alternatives
+
+In a current project I was originally using [SplitView](https://github.com/stevengharris/SplitView) by
+[Steve Harris](https://github.com/stevengharris) which is very nice, but I opted to write my own after having some
+difficulty integrating it into my app that is based on TCA. My version adopts many of the same features, but it does
+have a hard dependency on TCA, so consider Steve's implementation if you are looking for a SwifUI-only version.
+
