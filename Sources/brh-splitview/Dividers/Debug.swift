@@ -17,9 +17,13 @@ public struct DebugDivider: View {
   public var body: some View {
     ZStack(alignment: .center) {
       Color.blue.opacity(0.50)
-        .frame(width: isHorizontal ? nil : invisibleDividerSpan, height: isHorizontal ? invisibleDividerSpan : nil)
+        .frame(
+          width: isHorizontal ? nil : invisibleDividerSpan,
+          height: isHorizontal ? invisibleDividerSpan : nil)
       Color.red.opacity(1.0)
-        .frame(width: isHorizontal ? nil : visibleDividerSpan, height: isHorizontal ? visibleDividerSpan : nil)
+        .frame(
+          width: isHorizontal ? nil : visibleDividerSpan,
+          height: isHorizontal ? visibleDividerSpan : nil)
     }
   }
 }

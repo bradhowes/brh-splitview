@@ -10,7 +10,7 @@ public struct SplitViewPanes: OptionSet, Sendable, Equatable {
 
   /**
    Implementation of `OptionSet` protocol.
-
+  
    - parameter rawValue: the integer value that represents the options to hold
    */
   public init(rawValue: Int) {

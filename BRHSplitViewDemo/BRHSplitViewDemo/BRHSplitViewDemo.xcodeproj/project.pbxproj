@@ -1,0 +1,648 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BDCFBAE02DBD5DEF00606C7A /* BRHSplitview in Frameworks */ = {isa = PBXBuildFile; productRef = BDCFBADF2DBD5DEF00606C7A /* BRHSplitview */; };
+		BDCFBAE52DBD5E5A00606C7A /* BRHSplitview in Frameworks */ = {isa = PBXBuildFile; productRef = BDCFBAE42DBD5E5A00606C7A /* BRHSplitview */; };
+		BDCFBAE82DBD5F2F00606C7A /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = BDCFBAE72DBD5F2F00606C7A /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BDCFBAC22DBD5DBD00606C7A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BDCFBAAB2DBD5DBB00606C7A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BDCFBAB22DBD5DBB00606C7A;
+			remoteInfo = BRHSplitViewDemo;
+		};
+		BDCFBACC2DBD5DBD00606C7A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BDCFBAAB2DBD5DBB00606C7A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BDCFBAB22DBD5DBB00606C7A;
+			remoteInfo = BRHSplitViewDemo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BDCFBAB32DBD5DBB00606C7A /* BRHSplitViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BRHSplitViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDCFBAC12DBD5DBD00606C7A /* BRHSplitViewDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRHSplitViewDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDCFBACB2DBD5DBD00606C7A /* BRHSplitViewDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRHSplitViewDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		BDCFBAB52DBD5DBB00606C7A /* BRHSplitViewDemo */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BRHSplitViewDemo;
+			sourceTree = "<group>";
+		};
+		BDCFBAC42DBD5DBD00606C7A /* BRHSplitViewDemoTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BRHSplitViewDemoTests;
+			sourceTree = "<group>";
+		};
+		BDCFBACE2DBD5DBD00606C7A /* BRHSplitViewDemoUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BRHSplitViewDemoUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BDCFBAB02DBD5DBB00606C7A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDCFBAE02DBD5DEF00606C7A /* BRHSplitview in Frameworks */,
+				BDCFBAE52DBD5E5A00606C7A /* BRHSplitview in Frameworks */,
+				BDCFBAE82DBD5F2F00606C7A /* ComposableArchitecture in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCFBABE2DBD5DBD00606C7A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCFBAC82DBD5DBD00606C7A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BDCFBAAA2DBD5DBB00606C7A = {
+			isa = PBXGroup;
+			children = (
+				BDCFBAB52DBD5DBB00606C7A /* BRHSplitViewDemo */,
+				BDCFBAC42DBD5DBD00606C7A /* BRHSplitViewDemoTests */,
+				BDCFBACE2DBD5DBD00606C7A /* BRHSplitViewDemoUITests */,
+				BDCFBAB42DBD5DBB00606C7A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BDCFBAB42DBD5DBB00606C7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BDCFBAB32DBD5DBB00606C7A /* BRHSplitViewDemo.app */,
+				BDCFBAC12DBD5DBD00606C7A /* BRHSplitViewDemoTests.xctest */,
+				BDCFBACB2DBD5DBD00606C7A /* BRHSplitViewDemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BDCFBAB22DBD5DBB00606C7A /* BRHSplitViewDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDCFBAD52DBD5DBD00606C7A /* Build configuration list for PBXNativeTarget "BRHSplitViewDemo" */;
+			buildPhases = (
+				BDCFBAAF2DBD5DBB00606C7A /* Sources */,
+				BDCFBAB02DBD5DBB00606C7A /* Frameworks */,
+				BDCFBAB12DBD5DBB00606C7A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BDCFBAB52DBD5DBB00606C7A /* BRHSplitViewDemo */,
+			);
+			name = BRHSplitViewDemo;
+			packageProductDependencies = (
+				BDCFBADF2DBD5DEF00606C7A /* BRHSplitview */,
+				BDCFBAE42DBD5E5A00606C7A /* BRHSplitview */,
+				BDCFBAE72DBD5F2F00606C7A /* ComposableArchitecture */,
+			);
+			productName = BRHSplitViewDemo;
+			productReference = BDCFBAB32DBD5DBB00606C7A /* BRHSplitViewDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BDCFBAC02DBD5DBD00606C7A /* BRHSplitViewDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDCFBAD82DBD5DBD00606C7A /* Build configuration list for PBXNativeTarget "BRHSplitViewDemoTests" */;
+			buildPhases = (
+				BDCFBABD2DBD5DBD00606C7A /* Sources */,
+				BDCFBABE2DBD5DBD00606C7A /* Frameworks */,
+				BDCFBABF2DBD5DBD00606C7A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BDCFBAC32DBD5DBD00606C7A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BDCFBAC42DBD5DBD00606C7A /* BRHSplitViewDemoTests */,
+			);
+			name = BRHSplitViewDemoTests;
+			packageProductDependencies = (
+			);
+			productName = BRHSplitViewDemoTests;
+			productReference = BDCFBAC12DBD5DBD00606C7A /* BRHSplitViewDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BDCFBACA2DBD5DBD00606C7A /* BRHSplitViewDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDCFBADB2DBD5DBD00606C7A /* Build configuration list for PBXNativeTarget "BRHSplitViewDemoUITests" */;
+			buildPhases = (
+				BDCFBAC72DBD5DBD00606C7A /* Sources */,
+				BDCFBAC82DBD5DBD00606C7A /* Frameworks */,
+				BDCFBAC92DBD5DBD00606C7A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BDCFBACD2DBD5DBD00606C7A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BDCFBACE2DBD5DBD00606C7A /* BRHSplitViewDemoUITests */,
+			);
+			name = BRHSplitViewDemoUITests;
+			packageProductDependencies = (
+			);
+			productName = BRHSplitViewDemoUITests;
+			productReference = BDCFBACB2DBD5DBD00606C7A /* BRHSplitViewDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BDCFBAAB2DBD5DBB00606C7A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					BDCFBAB22DBD5DBB00606C7A = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					BDCFBAC02DBD5DBD00606C7A = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = BDCFBAB22DBD5DBB00606C7A;
+					};
+					BDCFBACA2DBD5DBD00606C7A = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = BDCFBAB22DBD5DBB00606C7A;
+					};
+				};
+			};
+			buildConfigurationList = BDCFBAAE2DBD5DBB00606C7A /* Build configuration list for PBXProject "BRHSplitViewDemo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BDCFBAAA2DBD5DBB00606C7A;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BDCFBAE32DBD5E5A00606C7A /* XCLocalSwiftPackageReference "../../../brh-splitview" */,
+				BDCFBAE62DBD5F2F00606C7A /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = BDCFBAB42DBD5DBB00606C7A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BDCFBAB22DBD5DBB00606C7A /* BRHSplitViewDemo */,
+				BDCFBAC02DBD5DBD00606C7A /* BRHSplitViewDemoTests */,
+				BDCFBACA2DBD5DBD00606C7A /* BRHSplitViewDemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BDCFBAB12DBD5DBB00606C7A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCFBABF2DBD5DBD00606C7A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCFBAC92DBD5DBD00606C7A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BDCFBAAF2DBD5DBB00606C7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCFBABD2DBD5DBD00606C7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDCFBAC72DBD5DBD00606C7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BDCFBAC32DBD5DBD00606C7A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BDCFBAB22DBD5DBB00606C7A /* BRHSplitViewDemo */;
+			targetProxy = BDCFBAC22DBD5DBD00606C7A /* PBXContainerItemProxy */;
+		};
+		BDCFBACD2DBD5DBD00606C7A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BDCFBAB22DBD5DBB00606C7A /* BRHSplitViewDemo */;
+			targetProxy = BDCFBACC2DBD5DBD00606C7A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BDCFBAD32DBD5DBD00606C7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BDCFBAD42DBD5DBD00606C7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		BDCFBAD62DBD5DBD00606C7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BRHSplitViewDemo/BRHSplitViewDemo.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braysoftware.BRHSplitViewDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Debug;
+		};
+		BDCFBAD72DBD5DBD00606C7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BRHSplitViewDemo/BRHSplitViewDemo.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braysoftware.BRHSplitViewDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Release;
+		};
+		BDCFBAD92DBD5DBD00606C7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braysoftware.BRHSplitViewDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BRHSplitViewDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BRHSplitViewDemo";
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Debug;
+		};
+		BDCFBADA2DBD5DBD00606C7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braysoftware.BRHSplitViewDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BRHSplitViewDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BRHSplitViewDemo";
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Release;
+		};
+		BDCFBADC2DBD5DBD00606C7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braysoftware.BRHSplitViewDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = BRHSplitViewDemo;
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Debug;
+		};
+		BDCFBADD2DBD5DBD00606C7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UP6SS5ES7E;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braysoftware.BRHSplitViewDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = BRHSplitViewDemo;
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BDCFBAAE2DBD5DBB00606C7A /* Build configuration list for PBXProject "BRHSplitViewDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDCFBAD32DBD5DBD00606C7A /* Debug */,
+				BDCFBAD42DBD5DBD00606C7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDCFBAD52DBD5DBD00606C7A /* Build configuration list for PBXNativeTarget "BRHSplitViewDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDCFBAD62DBD5DBD00606C7A /* Debug */,
+				BDCFBAD72DBD5DBD00606C7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDCFBAD82DBD5DBD00606C7A /* Build configuration list for PBXNativeTarget "BRHSplitViewDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDCFBAD92DBD5DBD00606C7A /* Debug */,
+				BDCFBADA2DBD5DBD00606C7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDCFBADB2DBD5DBD00606C7A /* Build configuration list for PBXNativeTarget "BRHSplitViewDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDCFBADC2DBD5DBD00606C7A /* Debug */,
+				BDCFBADD2DBD5DBD00606C7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		BDCFBAE32DBD5E5A00606C7A /* XCLocalSwiftPackageReference "../../../brh-splitview" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../brh-splitview";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BDCFBAE62DBD5F2F00606C7A /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BDCFBADF2DBD5DEF00606C7A /* BRHSplitview */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BRHSplitview;
+		};
+		BDCFBAE42DBD5E5A00606C7A /* BRHSplitview */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BRHSplitview;
+		};
+		BDCFBAE72DBD5F2F00606C7A /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDCFBAE62DBD5F2F00606C7A /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = BDCFBAAB2DBD5DBB00606C7A /* Project object */;
+}

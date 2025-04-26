@@ -19,7 +19,10 @@ public struct MinimalDivider: View {
     ZStack {
       Rectangle()
         .fill(color)
-        .frame(width: isHorizontal ? nil : visibleDividerSpan, height: isHorizontal ? visibleDividerSpan : nil)
+        .frame(
+          width: isHorizontal ? nil : visibleDividerSpan,
+          height: isHorizontal ? visibleDividerSpan : nil
+        )
         .padding(0)
     }
     .contentShape(Rectangle())

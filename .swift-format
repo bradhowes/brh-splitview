@@ -1,0 +1,16 @@
+{
+  "lineLength": 120,
+  "indentation": {"spaces": 2},
+  "prioritizeKeepingFunctionOutputTogether": true,
+  "rules": {
+    "NoBlockComments": false,
+    "OmitExplicitReturns": true,
+    "UseWhereClausesInForLoops": true,
+    "ValidateDocumentationComments": true,
+    "UseSynthesizedInitializer": true,
+    "UseSingleLinePropertyGetter": true,
+    "UseShorthandTypeNames": true,
+    "UseLetInEveryBoundCaseVariable": false,
+    "UseEarlyExits": true
+  }
+}

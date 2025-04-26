@@ -52,7 +52,7 @@ public struct SplitViewReducer {
   public init() {}
 
   public var body: some ReducerOf<Self> {
-    Reduce { state, action  in
+    Reduce { state, action in
       switch action {
       case .delegate: return .none
       case let .doubleClicked(config): return doubleClicked(&state, config: config)
@@ -143,7 +143,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
 
   public init(
     store: StoreOf<SplitViewReducer>,
-    @ViewBuilder primary: @escaping ()-> P,
+    @ViewBuilder primary: @escaping () -> P,
     @ViewBuilder divider: @escaping () -> D,
     @ViewBuilder secondary: @escaping () -> S
   ) {
@@ -167,27 +167,35 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
       let primaryAndHandleSpan = primarySpan + handleSpan
       let secondarySpan = span - primaryAndHandleSpan
 
-      let primaryFrame: CGSize = orientation.horizontal
-      ? .init(width: panesVisible.secondary ? primarySpan : span, height: height)
-      : .init(width: width, height: panesVisible.secondary ? primarySpan : span)
+      let primaryFrame: CGSize =
+        orientation.horizontal
+        ? .init(width: panesVisible.secondary ? primarySpan : span, height: height)
+        : .init(width: width, height: panesVisible.secondary ? primarySpan : span)
 
-      let primaryOffset: CGSize = orientation.horizontal
-      ? .init(width: panesVisible.primary ? 0 : -primaryAndHandleSpan, height: 0)
-      : .init(width: 0, height: panesVisible.primary ? 0 : -primaryAndHandleSpan)
+      let primaryOffset: CGSize =
+        orientation.horizontal
+        ? .init(width: panesVisible.primary ? 0 : -primaryAndHandleSpan, height: 0)
+        : .init(width: 0, height: panesVisible.primary ? 0 : -primaryAndHandleSpan)
 
-      let secondaryFrame: CGSize = orientation.horizontal
-      ? .init(width: panesVisible.primary ? secondarySpan : span, height: height)
-      : .init(width: width, height: panesVisible.primary ? secondarySpan : span)
+      let secondaryFrame: CGSize =
+        orientation.horizontal
+        ? .init(width: panesVisible.primary ? secondarySpan : span, height: height)
+        : .init(width: width, height: panesVisible.primary ? secondarySpan : span)
 
-      let secondaryOffsetSpan = panesVisible.both ? primaryAndHandleSpan : (panesVisible.primary ? span + handleSpan: 0)
-      let secondaryOffset: CGSize = orientation.horizontal
-      ? .init(width: secondaryOffsetSpan, height: 0)
-      : .init(width: 0, height: secondaryOffsetSpan)
+      let secondaryOffsetSpan =
+        panesVisible.both ? primaryAndHandleSpan : (panesVisible.primary ? span + handleSpan : 0)
+      let secondaryOffset: CGSize =
+        orientation.horizontal
+        ? .init(width: secondaryOffsetSpan, height: 0)
+        : .init(width: 0, height: secondaryOffsetSpan)
 
-      let dividerOffset = (panesVisible.both ? dividerPos : (panesVisible.primary ? span + handleSpan2 : -handleSpan2))
-      let dividerPt: CGPoint = orientation.horizontal
-      ? .init(x: dividerOffset, y: height / 2)
-      : .init(x: width / 2, y: dividerOffset)
+      let dividerOffset =
+        (panesVisible.both
+          ? dividerPos : (panesVisible.primary ? span + handleSpan2 : -handleSpan2))
+      let dividerPt: CGPoint =
+        orientation.horizontal
+        ? .init(x: dividerOffset, y: height / 2)
+        : .init(x: width / 2, y: dividerOffset)
 
       ZStack(alignment: .topLeading) {
         primaryContent()
@@ -224,9 +232,11 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
 extension SplitView {
 
   private func drag(in span: Double, change: KeyPath<DragGesture.Value, CGFloat>) -> some Gesture {
-    return DragGesture(coordinateSpace: .global)
+    DragGesture(coordinateSpace: .global)
       .onChanged { gesture in
-        store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: gesture[keyPath: change])))
+        store.send(
+          .dragOnChanged(
+            dragState: .init(config: config, span: span, change: gesture[keyPath: change])))
       }
       .onEnded { _ in
         store.send(.dragOnEnded(config: config))
@@ -249,7 +259,7 @@ private struct DemoHSplit: View {
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(Color.green)
     } divider: {
-      HandleDivider(dividerColor: .black) // DebugDivider()
+      HandleDivider(dividerColor: .black)  // DebugDivider()
     } secondary: {
       VStack {
         button("Left", pane: .secondary)
@@ -282,7 +292,7 @@ private struct DemoVSplit: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.mint)
       } divider: {
-        HandleDivider(dividerColor: .black) // DebugDivider()
+        HandleDivider(dividerColor: .black)  // DebugDivider()
       } secondary: {
         HStack {
           VStack {
@@ -292,23 +302,25 @@ private struct DemoVSplit: View {
           .padding()
 
           DemoHSplit(store: inner)
-            .splitViewConfiguration(.init(
-              orientation: .horizontal,
-              draggableRange: 0.3...0.7,
-              dragToHidePanes: .both,
-              doubleClickToClose: .left,
-              visibleDividerSpan: 4
-            ))
+            .splitViewConfiguration(
+              .init(
+                orientation: .horizontal,
+                draggableRange: 0.3...0.7,
+                dragToHidePanes: .both,
+                doubleClickToClose: .left,
+                visibleDividerSpan: 4
+              ))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.brown)
-      }.splitViewConfiguration(.init(
-        orientation: .vertical,
-        draggableRange: 0.3...0.7,
-        dragToHidePanes: .bottom,
-        doubleClickToClose: .bottom,
-        visibleDividerSpan: 4
-      ))
+      }.splitViewConfiguration(
+        .init(
+          orientation: .vertical,
+          draggableRange: 0.3...0.7,
+          dragToHidePanes: .bottom,
+          doubleClickToClose: .bottom,
+          visibleDividerSpan: 4
+        ))
       // Collection of buttons that toggles pane visibility and shows current state.
       HStack {
         Button {
@@ -357,34 +369,46 @@ internal struct SplitViewPreviews {
 
   @MainActor
   static var horizontal: some View {
-    SplitView(store: Store(initialState: .init()) {
-      SplitViewReducer()
-    }, primary: {
-      Text("Hello")
-    }, divider: {
-      MinimalDivider()
-    }, secondary: {
-      Text("World!")
-    }).splitViewConfiguration(.init(
-      orientation: .horizontal,
-      draggableRange: 0.1...0.9
-    ))
+    SplitView(
+      store: Store(initialState: .init()) {
+        SplitViewReducer()
+      },
+      primary: {
+        Text("Hello")
+      },
+      divider: {
+        MinimalDivider()
+      },
+      secondary: {
+        Text("World!")
+      }
+    ).splitViewConfiguration(
+      .init(
+        orientation: .horizontal,
+        draggableRange: 0.1...0.9
+      ))
   }
 
   @MainActor
   static var vertical: some View {
-    SplitView(store: Store(initialState: .init()) {
-      SplitViewReducer()
-    }, primary: {
-      Text("Hello")
-    }, divider: {
-      MinimalDivider()
-    }, secondary: {
-      Text("World!")
-    }).splitViewConfiguration(.init(
-      orientation: .vertical,
-      draggableRange: 0.1...0.9
-    ))
+    SplitView(
+      store: Store(initialState: .init()) {
+        SplitViewReducer()
+      },
+      primary: {
+        Text("Hello")
+      },
+      divider: {
+        MinimalDivider()
+      },
+      secondary: {
+        Text("World!")
+      }
+    ).splitViewConfiguration(
+      .init(
+        orientation: .vertical,
+        draggableRange: 0.1...0.9
+      ))
   }
 
   @MainActor

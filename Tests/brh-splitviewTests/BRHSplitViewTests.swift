@@ -1,6 +1,6 @@
 import SnapshotTesting
-import Testing
 import SwiftUI
+import Testing
 
 @testable import BRHSplitview
 
@@ -18,7 +18,7 @@ import SwiftUI
       (SplitViewPanes.none, 0.3...0.8),
       (SplitViewPanes.primary, 0.0...0.8),
       (SplitViewPanes.secondary, 0.3...1.0),
-      (SplitViewPanes.both, 0.0...1.0)
+      (SplitViewPanes.both, 0.0...1.0),
     ]
   )
   func boundsHonorsDragToHidePanes(run: (SplitViewPanes, ClosedRange<Double>)) throws {
@@ -74,6 +74,8 @@ import SwiftUI
 @MainActor
 @Suite("SplitViewFeature") struct SplitViewFeatureTests {
 
+#if os(iOS)
+
   @Test func horizontalPreview() throws {
     let view = Group {
       SplitViewPreviews.horizontal
@@ -103,4 +105,7 @@ import SwiftUI
 
     assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
   }
+
+#endif
+
 }

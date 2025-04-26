@@ -1,14 +1,22 @@
-PLATFORM_IOS = iOS Simulator,name=iPhone 16
+PLATFORM_IOS = iOS Simulator,name=iPhone 16 Pro
 PLATFORM_MACOS = macOS
+SCHEME = brh-splitview
 XCCOV = xcrun xccov view --report --only-targets
 
 
 default: report
 
+build-iOS:
+	rm -rf "$(PWD)/.DerivedData-iOS"
+	set -o pipefail && xcodebuild build-for-testing \
+		-scheme $(SCHEME) \
+		-derivedDataPath "$(PWD)/.DerivedData-iOS" \
+		-destination platform="$(PLATFORM_IOS)"
+
 test-iOS:
 	rm -rf "$(PWD)/.DerivedData-iOS"
 	set -o pipefail && xcodebuild test \
-		-scheme brh-splitview \
+		-scheme $(SCHEME) \
 		-derivedDataPath "$(PWD)/.DerivedData-iOS" \
 		-destination platform="$(PLATFORM_IOS)" \
 		-enableCodeCoverage YES | xcbeautify
@@ -26,7 +34,7 @@ percentage-iOS: coverage-iOS
 test-macOS:
 	rm -rf "$(PWD)/.DerivedData-macOS"
 	USE_UNSAFE_FLAGS="1" set -o pipefail && xcodebuild test \
-		-scheme brh-splitview \
+		-scheme $(SCHEME) \
 		-derivedDataPath "$(PWD)/.DerivedData-macOS" \
 		-destination platform="$(PLATFORM_MACOS)" \
 		-enableCodeCoverage YES | xcbeautify
@@ -45,6 +53,9 @@ report: percentage-iOS percentage-macOS
 	@if [[ -n "$$GITHUB_ENV" ]]; then \
         echo "PERCENTAGE=$$(< percentage_macOS.txt)" >> $$GITHUB_ENV; \
     fi
+
+format:
+	swift format --in-place --recursive ./Package.swift ./Sources ./Tests/brh-splitviewTests ./BRHSplitViewDemo
 
 .PHONY: report test-iOS test-macOS coverage-iOS coverage-macOS coverage-iOS percentage-macOS percentage-iOS
 

@@ -76,4 +76,3 @@ public struct HandleDivider: View {
     .contentShape(Rectangle())
   }
 }
-
