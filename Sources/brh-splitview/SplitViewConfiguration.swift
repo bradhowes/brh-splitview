@@ -5,6 +5,7 @@
  `.splitViewConfiguration` `View` modifier.
  */
 public struct SplitViewConfiguration: Equatable {
+  /// The orientation of the views, either `.horizontal` or `.vertical`.
   public let orientation: SplitViewOrientation
   /// The minimum fraction that the primary view will be constrained [0-1.0].
   /// The default is to be able to move the divider across the entire contents of the primary view.
@@ -20,7 +21,7 @@ public struct SplitViewConfiguration: Equatable {
   public let visibleDividerSpan: Double
 
   public init(
-    orientation: SplitViewOrientation = .horizontal,
+    orientation: SplitViewOrientation,
     minimumPrimaryFraction: Double = 0.0,
     minimumSecondaryFraction: Double = 0.0,
     dragToHidePanes: SplitViewPanes = [],

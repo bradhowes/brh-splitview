@@ -17,27 +17,22 @@ public var body: some View {
   SplitView(store: store) {
     Text("Hello")
   } divider: {
-    HandleDivider(for: .vertical, constraints: store.constraints)
+    HandleDivider()
   } secondary: {
     Text("World")
-  }
+  }.splitViewConfiguration(.init())
 }
 ```
 
-![](Simple_iOS.gif?raw=true)
+Here is a demo view that contains a vertical split view with the lower child pane holding a horizontal split view. The
+split view configurations enable dragging to close a child pane -- the horizontal split view allows it for both child
+panes, while the vertical orientation only allows it for the lower child pane. Here is the macOS rendering:
 
-And below shows rendering on macOS:
+![](media/macOS.gif?raw=true)
 
-![](Simple_macos.gif?raw=true)
+And below shows the iOSrendering:
+
+![](media/iOS.gif?raw=true)
 
 # Configuration
-
-
-# Demo App
-
-There is a simple demonstration application that runs on both macOS and iOS which shows the linkage via AUv3 parameters
-between AUv3 controls and AppKit/UIKit controls -- changes to one control cause a change in a specific AUParameter, 
-which is then seen by the other control. To build and run, open the Xcode project file in the [Demo](Demo) 
-folder. Make sure that the AUv3Controls package [Package.swift](Package.swift) file is not current open or else the demo
-will fail to build. 
 

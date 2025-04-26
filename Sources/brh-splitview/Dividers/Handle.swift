@@ -6,12 +6,12 @@ import SwiftUI
  Divider view that provides a handle for dragging.
  */
 public struct HandleDivider: View {
-  let dividerColor: Color
-  let handleColor: Color
-  let handleLength: Double
-  let handleWidth: Double
-  let paddingInsets: Double
-  @Environment(\.splitViewConfiguration) var config
+  private let dividerColor: Color
+  private let handleColor: Color
+  private let handleLength: Double
+  private let handleWidth: Double
+  private let paddingInsets: Double
+  @Environment(\.splitViewConfiguration) private var config
 
   public init(
     dividerColor: Color = .gray,
@@ -20,7 +20,7 @@ public struct HandleDivider: View {
     handleWidth: Double = 12.0,
     paddingInsets: Double = 6.0
   ) {
-    self.dividerColor = .gray
+    self.dividerColor = dividerColor
     self.handleColor = handleColor
     self.handleLength = handleLength
     self.handleWidth = handleWidth
@@ -31,7 +31,7 @@ public struct HandleDivider: View {
     ZStack {
       switch config.orientation {
       case .horizontal:
-
+        // Create a vertical divider
         Rectangle()
           .fill(dividerColor)
           .frame(width: config.visibleDividerSpan)
@@ -52,7 +52,7 @@ public struct HandleDivider: View {
         }
 
       case .vertical:
-
+        // Create a horizontal divider
         Rectangle()
           .fill(dividerColor)
           .frame(height: config.visibleDividerSpan)
@@ -60,7 +60,7 @@ public struct HandleDivider: View {
           .contentShape(.interaction, Rectangle())
           .frame(height: handleWidth * 2)
 
-        RoundedRectangle(cornerRadius: handleWidth / 2)
+        RoundedRectangle(cornerRadius: handleLength / 2)
           .fill(handleColor)
           .frame(width: handleLength, height: handleWidth)
           .padding(EdgeInsets(top: 0, leading: paddingInsets, bottom: 0, trailing: paddingInsets))

@@ -9,17 +9,17 @@ public struct DebugDivider: View {
   private let visibleDividerSpan: Double = 16
   private let invisibleDividerSpan: Double = 32
 
-  @Environment(\.splitViewConfiguration) var config
-  private var horizontal: Bool { config.orientation.horizontal }
+  @Environment(\.splitViewConfiguration) private var config
+  private var isHorizontal: Bool { config.orientation.vertical }
 
   init() {}
 
   public var body: some View {
     ZStack(alignment: .center) {
       Color.blue.opacity(0.50)
-        .frame(width: horizontal ? nil : invisibleDividerSpan, height: horizontal ? invisibleDividerSpan : nil)
+        .frame(width: isHorizontal ? nil : invisibleDividerSpan, height: isHorizontal ? invisibleDividerSpan : nil)
       Color.red.opacity(1.0)
-        .frame(width: horizontal ? nil : visibleDividerSpan, height: horizontal ? visibleDividerSpan : nil)
+        .frame(width: isHorizontal ? nil : visibleDividerSpan, height: isHorizontal ? visibleDividerSpan : nil)
     }
   }
 }

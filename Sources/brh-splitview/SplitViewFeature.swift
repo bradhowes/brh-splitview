@@ -225,18 +225,24 @@ private struct DemoHSplit: View {
   public var body: some View {
     SplitView(store: store) {
       VStack {
-        Button(store.panesVisible.both ? "Hide Right" : "Show Right") {
+        Button {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .primary : .both))
+        } label: {
+          Text(store.panesVisible.both ? "Hide Right" : "Show Right")
+            .foregroundStyle(Color.blue)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(Color.green)
     } divider: {
-      HandleDivider() // DebugDivider()
+      HandleDivider(dividerColor: .black) // DebugDivider()
     } secondary: {
       VStack {
-        Button(store.panesVisible.both ? "Hide Left" : "Show Left") {
+        Button {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
+        } label: {
+          Text(store.panesVisible.both ? "Hide Left" : "Show Left")
+            .foregroundStyle(Color.blue)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -253,19 +259,25 @@ private struct DemoVSplit: View {
     VStack {
       SplitView(store: store) {
         VStack {
-          Button(store.panesVisible.both ? "Hide Bottom" : "Show Bottom") {
+          Button {
             store.send(.updatePanesVisibility(store.panesVisible.both ? .primary : .both))
+          } label: {
+            Text(store.panesVisible.both ? "Hide Bottom" : "Show Bottom")
+              .foregroundStyle(Color.blue)
           }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.mint)
       } divider: {
-        HandleDivider() // DebugDivider()
+        HandleDivider(dividerColor: .black) // DebugDivider()
       } secondary: {
         HStack {
           VStack {
-            Button(store.panesVisible.both ? "Hide Top" : "Show Top") {
+            Button {
               store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
+            } label: {
+              Text(store.panesVisible.both ? "Hide Top" : "Show Top")
+                .foregroundStyle(Color.blue)
             }
           }.contentShape(Rectangle())
           DemoHSplit(store: inner)
@@ -278,7 +290,7 @@ private struct DemoVSplit: View {
             ))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.teal)
+        .background(Color.brown)
       }.splitViewConfiguration(.init(
         orientation: .vertical,
         minimumPrimaryFraction: 0.3,
@@ -286,6 +298,7 @@ private struct DemoVSplit: View {
         dragToHidePanes: .bottom,
         visibleDividerSpan: 4
       ))
+      // Collection of buttons that toggles pane visibility and shows current state.
       HStack {
         Button {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
@@ -315,7 +328,7 @@ private struct DemoVSplit: View {
             .foregroundStyle(inner.panesVisible.secondary ? Color.orange : Color.accentColor)
             .animation(.smooth, value: store.panesVisible)
         }
-      }
+      }.padding([.bottom], 8)
     }
   }
 }
@@ -330,8 +343,11 @@ struct SplitView_Previews: PreviewProvider {
       MinimalDivider()
     }, secondary: {
       Text("World!")
-    })
-    .environment(\.splitViewConfiguration, .init())
+    }).splitViewConfiguration(.init(
+      orientation: .horizontal,
+      minimumPrimaryFraction: 0.1,
+      minimumSecondaryFraction: 0.1
+    ))
     SplitView(store: Store(initialState: .init()) {
       SplitViewReducer()
     }, primary: {
@@ -340,8 +356,11 @@ struct SplitView_Previews: PreviewProvider {
       MinimalDivider()
     }, secondary: {
       Text("World!")
-    })
-    .environment(\.splitViewConfiguration, .init(orientation: .vertical))
+    }).splitViewConfiguration(.init(
+      orientation: .vertical,
+      minimumPrimaryFraction: 0.1,
+      minimumSecondaryFraction: 0.1
+    ))
     DemoVSplit(
       store: Store(initialState: .init()) { SplitViewReducer() },
       inner: Store(initialState: .init()) { SplitViewReducer() }

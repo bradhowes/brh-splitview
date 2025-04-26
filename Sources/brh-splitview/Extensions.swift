@@ -11,7 +11,7 @@ internal extension ClosedRange {
 }
 
 extension EnvironmentValues {
-  @Entry public var splitViewConfiguration: SplitViewConfiguration = .init()
+  @Entry public var splitViewConfiguration: SplitViewConfiguration = .init(orientation: .horizontal)
 }
 
 extension View {

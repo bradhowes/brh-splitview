@@ -6,8 +6,10 @@ import SwiftUI
  Divider view that provides a handle for dragging.
  */
 public struct MinimalDivider: View {
-  let color: Color
-  @Environment(\.splitViewConfiguration) var config
+  private let color: Color
+  @Environment(\.splitViewConfiguration) private var config
+  private var isHorizontal: Bool { config.orientation.vertical }
+  private var visibleDividerSpan: Double { config.visibleDividerSpan }
 
   public init(color: Color = .gray) {
     self.color = color
@@ -15,21 +17,11 @@ public struct MinimalDivider: View {
 
   public var body: some View {
     ZStack {
-      switch config.orientation {
-      case .horizontal:
-        Rectangle()
-          .fill(color)
-          .frame(width: config.visibleDividerSpan)
-          .padding(0)
-
-      case .vertical:
-        Rectangle()
-          .fill(color)
-          .frame(height: config.visibleDividerSpan)
-          .padding(0)
-      }
+      Rectangle()
+        .fill(color)
+        .frame(width: isHorizontal ? nil : visibleDividerSpan, height: isHorizontal ? visibleDividerSpan : nil)
+        .padding(0)
     }
     .contentShape(Rectangle())
   }
 }
-
