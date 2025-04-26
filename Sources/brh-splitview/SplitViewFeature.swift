@@ -30,11 +30,12 @@ public struct SplitViewReducer {
   }
 
   public enum Action: Equatable {
-    case dragBegin(Double)
-    case dragMove(Double, SplitViewPanes)
-    case dragEnd(Double, SplitViewPanes)
-    case updatePanesVisibility(SplitViewPanes)
     case delegate(Delegate)
+    case doubleClicked(config: SplitViewConfiguration)
+    case dragOnChanged(config: SplitViewConfiguration, gesture: DragGesture.Value, span: Double,
+                       change: KeyPath<DragGesture.Value, CGFloat>)
+    case dragOnEnded(config: SplitViewConfiguration)
+    case updatePanesVisibility(SplitViewPanes)
   }
 
   @CasePathable
@@ -48,12 +49,23 @@ public struct SplitViewReducer {
     Reduce { state, action  in
       switch action {
       case .delegate: return .none
-      case let .dragBegin(span): return dragBegin(&state, span: span)
-      case let .dragEnd(position, visible): return dragEnd(&state, position: position, visible: visible)
-      case let .dragMove(position, willHide): return dragMove(&state, position: position, willHide: willHide)
-      case .updatePanesVisibility(let visible): return updateVisiblePanes(&state, panes: visible)
+      case let .doubleClicked(config): return doubleClicked(&state, config: config)
+      case let .dragOnChanged(config, gesture, span, keyPath): return dragOnChanged(
+        &state, config: config, gesture: gesture, span: span, change: keyPath
+      )
+      case let .dragOnEnded(config): return dragOnEnded(&state, config: config)
+      case let .updatePanesVisibility(visible): return updateVisiblePanes(&state, panes: visible)
       }
     }
+  }
+
+  private func doubleClicked(_ state: inout State, config: SplitViewConfiguration) -> Effect<Action> {
+    if config.doubleClickToClose.contains(.secondary) {
+      return updateVisiblePanes(&state, panes: .primary)
+    } else if config.doubleClickToClose.contains(.primary) {
+      return updateVisiblePanes(&state, panes: .secondary)
+    }
+    return .none
   }
 
   private func dragBegin(_ state: inout State, span: Double) -> Effect<Action> {
@@ -73,6 +85,53 @@ public struct SplitViewReducer {
     state.position = position
     state.highlightPane = willHide
     return .none
+  }
+
+  private func dragOnChanged(
+    _ state: inout State,
+    config: SplitViewConfiguration,
+    gesture: DragGesture.Value,
+    span: Double,
+    change: KeyPath<DragGesture.Value, CGFloat>
+  ) -> Effect<Action> {
+    if let initialPosition = state.initialPosition {
+      // Calculate new normalized position [0.0-1.0] of the divider
+      let unconstrained = (initialPosition + gesture[keyPath: change]).clamped(to: 0...span) / span
+      // Constrain the above so that it obeys the configured constraints
+      let position = unconstrained.clamped(to: config.dragBounds)
+      if position < config.draggableRange.lowerBound {
+        // Highlight the primary pane will be closed if the drag ends
+        state.highlightPane = .primary
+      } else if position > config.draggableRange.upperBound {
+        // Highlight the secondary pane will be closed if the drag ends
+        state.highlightPane = .secondary
+      } else {
+        state.highlightPane = .none
+      }
+      state.position = position
+    } else {
+      state.lastPosition = state.position
+      state.initialPosition = span * state.position
+    }
+    return .none
+  }
+
+  private func dragOnEnded(_ state: inout State, config: SplitViewConfiguration) -> Effect<Action> {
+    state.initialPosition = nil
+    state.highlightPane = []
+    if state.position < config.draggableRange.lowerBound {
+      // Dragged below the draggableRange so close the primary child view pane
+      state.position = state.lastPosition
+      return updateVisiblePanes(&state, panes: .secondary)
+    } else if state.position > config.draggableRange.upperBound {
+      // Dragged above the draggableRange so close the secondary child view pane
+      state.position = state.lastPosition
+      return updateVisiblePanes(&state, panes: .primary)
+    } else {
+      // Not closing anything -- just update the new divider position.
+      state.position = state.position.clamped(to: config.draggableRange)
+      return .none
+    }
   }
 
   private func updateVisiblePanes(_ state: inout State, panes: SplitViewPanes) -> Effect<Action> {
@@ -165,11 +224,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
           .position(dividerPt)
           .zIndex(panesVisible.both ? 1 : -2)
           .onTapGesture(count: 2) {
-            if config.doubleClickToClose.contains(.secondary) {
-              store.send(.updatePanesVisibility(.primary))
-            } else if config.doubleClickToClose.contains(.primary) {
-              store.send(.updatePanesVisibility(.secondary))
-            }
+            store.send(.doubleClicked(config: config))
           }
           .simultaneousGesture(
             drag(in: span, change: orientation.horizontal ? \.translation.width : \.translation.height)
@@ -187,35 +242,10 @@ extension SplitView {
   private func drag(in span: Double, change: KeyPath<DragGesture.Value, CGFloat>) -> some Gesture {
     return DragGesture(coordinateSpace: .global)
       .onChanged { gesture in
-        if let initialPosition = store.initialPosition {
-          // Calculate new normalized position [0.0-1.0] of the divider
-          let unconstrained = (initialPosition + gesture[keyPath: change]).clamped(to: 0...span) / span
-          // Constrain the above so that it obeys the configured constraints
-          let position = unconstrained.clamped(to: config.dragBounds)
-          if position < config.draggableRange.lowerBound {
-            // Highlight the primary pane will be closed if the drag ends
-            store.send(.dragMove(position, .primary))
-          } else if position > config.draggableRange.upperBound {
-            // Highlight the secondary pane will be closed if the drag ends
-            store.send(.dragMove(position, .secondary))
-          } else {
-            store.send(.dragMove(position, .none))
-          }
-        } else {
-          store.send(.dragBegin(span))
-        }
+        store.send(.dragOnChanged(config: config, gesture: gesture, span: span, change: change))
       }
-      .onEnded { gesture in
-        if store.position < config.draggableRange.lowerBound {
-          // Dragged below the draggableRange so close the primary child view pane
-          store.send(.dragEnd(store.lastPosition, .secondary))
-        } else if store.position > config.draggableRange.upperBound {
-          // Dragged above the draggableRange so close the secondary child view pane
-          store.send(.dragEnd(store.lastPosition, .primary))
-        } else {
-          // Not closing anything -- just update the new divider position.
-          store.send(.dragEnd(store.position.clamped(to: config.draggableRange), .both))
-        }
+      .onEnded { _ in
+        store.send(.dragOnEnded(config: config))
       }
   }
 }
@@ -339,8 +369,10 @@ private struct DemoVSplit: View {
   }
 }
 
-struct SplitView_Previews: PreviewProvider {
-  static var previews: some View {
+internal struct SplitViewPreviews {
+
+  @MainActor
+  static var horizontal: some View {
     SplitView(store: Store(initialState: .init()) {
       SplitViewReducer()
     }, primary: {
@@ -353,6 +385,10 @@ struct SplitView_Previews: PreviewProvider {
       orientation: .horizontal,
       draggableRange: 0.1...0.9
     ))
+  }
+
+  @MainActor
+  static var vertical: some View {
     SplitView(store: Store(initialState: .init()) {
       SplitViewReducer()
     }, primary: {
@@ -365,9 +401,21 @@ struct SplitView_Previews: PreviewProvider {
       orientation: .vertical,
       draggableRange: 0.1...0.9
     ))
+  }
+
+  @MainActor
+  static var demo: some View {
     DemoVSplit(
       store: Store(initialState: .init()) { SplitViewReducer() },
       inner: Store(initialState: .init()) { SplitViewReducer() }
     )
+  }
+}
+
+struct SplitView_Previews: PreviewProvider {
+  static var previews: some View {
+    SplitViewPreviews.horizontal
+    SplitViewPreviews.vertical
+    SplitViewPreviews.demo
   }
 }

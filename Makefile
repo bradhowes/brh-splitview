@@ -1,4 +1,4 @@
-PLATFORM_IOS = iOS Simulator,name=iPad mini (6th generation)
+PLATFORM_IOS = iOS Simulator,name=iPhone 16
 PLATFORM_MACOS = macOS
 XCCOV = xcrun xccov view --report --only-targets
 
