@@ -8,12 +8,15 @@ public struct SplitViewReducer {
 
   @ObservableState
   public struct State: Equatable {
+    /// The currently visible child panes
     public var panesVisible: SplitViewPanes
+    /// The normalized position of the divider [0.0-1.0]
     public var position: Double
-
+    /// Any child pane to blur while dragging to signal that the child pane will close if dragging is
+    /// stopped at the current position.
+    public var highlightPane: SplitViewPanes = []
     // Drag-gesture state. Unable to move into a @GestureState struct since its lifetime is not long enough to be
     // useful.
-    public var highlightPane: SplitViewPanes = []
     @ObservationStateIgnored public var initialPosition: Double?
     @ObservationStateIgnored public var lastPosition: Double = .zero
 
@@ -162,10 +165,10 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
           .position(dividerPt)
           .zIndex(panesVisible.both ? 1 : -2)
           .onTapGesture(count: 2) {
-            if config.dragToHidePanes.contains(.primary) {
-              store.send(.updatePanesVisibility(.secondary))
-            } else if config.dragToHidePanes.contains(.secondary) {
+            if config.doubleClickToClose.contains(.secondary) {
               store.send(.updatePanesVisibility(.primary))
+            } else if config.doubleClickToClose.contains(.primary) {
+              store.send(.updatePanesVisibility(.secondary))
             }
           }
           .simultaneousGesture(
@@ -185,11 +188,15 @@ extension SplitView {
     return DragGesture(coordinateSpace: .global)
       .onChanged { gesture in
         if let initialPosition = store.initialPosition {
+          // Calculate new normalized position [0.0-1.0] of the divider
           let unconstrained = (initialPosition + gesture[keyPath: change]).clamped(to: 0...span) / span
-          let position = unconstrained.clamped(to: lowerBound...upperBound)
-          if position < minPrimarySpan {
+          // Constrain the above so that it obeys the configured constraints
+          let position = unconstrained.clamped(to: config.dragBounds)
+          if position < config.draggableRange.lowerBound {
+            // Highlight the primary pane will be closed if the drag ends
             store.send(.dragMove(position, .primary))
-          } else if position > maxSecondarySpan {
+          } else if position > config.draggableRange.upperBound {
+            // Highlight the secondary pane will be closed if the drag ends
             store.send(.dragMove(position, .secondary))
           } else {
             store.send(.dragMove(position, .none))
@@ -199,20 +206,18 @@ extension SplitView {
         }
       }
       .onEnded { gesture in
-        if store.position < minPrimarySpan {
+        if store.position < config.draggableRange.lowerBound {
+          // Dragged below the draggableRange so close the primary child view pane
           store.send(.dragEnd(store.lastPosition, .secondary))
-        } else if store.position > maxSecondarySpan {
+        } else if store.position > config.draggableRange.upperBound {
+          // Dragged above the draggableRange so close the secondary child view pane
           store.send(.dragEnd(store.lastPosition, .primary))
         } else {
-          store.send(.dragEnd(store.position.clamped(to: minPrimarySpan...maxSecondarySpan), .both))
+          // Not closing anything -- just update the new divider position.
+          store.send(.dragEnd(store.position.clamped(to: config.draggableRange), .both))
         }
       }
   }
-
-  private var minPrimarySpan: Double { config.minimumPrimaryFraction }
-  private var maxSecondarySpan: Double { 1.0 - config.minimumSecondaryFraction }
-  private var lowerBound: Double { config.dragToHidePanes.contains(.primary) ? 0.0 : minPrimarySpan }
-  private var upperBound: Double { config.dragToHidePanes.contains(.secondary) ? 1.0 : maxSecondarySpan }
 }
 
 private struct DemoHSplit: View {
@@ -225,12 +230,7 @@ private struct DemoHSplit: View {
   public var body: some View {
     SplitView(store: store) {
       VStack {
-        Button {
-          store.send(.updatePanesVisibility(store.panesVisible.both ? .primary : .both))
-        } label: {
-          Text(store.panesVisible.both ? "Hide Right" : "Show Right")
-            .foregroundStyle(Color.blue)
-        }
+        button("Right", pane: .primary)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(Color.green)
@@ -238,15 +238,19 @@ private struct DemoHSplit: View {
       HandleDivider(dividerColor: .black) // DebugDivider()
     } secondary: {
       VStack {
-        Button {
-          store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
-        } label: {
-          Text(store.panesVisible.both ? "Hide Left" : "Show Left")
-            .foregroundStyle(Color.blue)
-        }
+        button("Left", pane: .secondary)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(Color.orange)
+    }
+  }
+
+  private func button(_ side: String, pane: SplitViewPanes) -> some View {
+    Button {
+      store.send(.updatePanesVisibility(store.panesVisible.both ? pane : .both))
+    } label: {
+      Text(store.panesVisible.both ? "Hide \(side)" : "Show \(side)")
+        .foregroundStyle(Color.blue)
     }
   }
 }
@@ -259,12 +263,7 @@ private struct DemoVSplit: View {
     VStack {
       SplitView(store: store) {
         VStack {
-          Button {
-            store.send(.updatePanesVisibility(store.panesVisible.both ? .primary : .both))
-          } label: {
-            Text(store.panesVisible.both ? "Hide Bottom" : "Show Bottom")
-              .foregroundStyle(Color.blue)
-          }
+          button("Bottom", pane: .primary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.mint)
@@ -273,19 +272,17 @@ private struct DemoVSplit: View {
       } secondary: {
         HStack {
           VStack {
-            Button {
-              store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
-            } label: {
-              Text(store.panesVisible.both ? "Hide Top" : "Show Top")
-                .foregroundStyle(Color.blue)
-            }
-          }.contentShape(Rectangle())
+            button("Top", pane: .secondary)
+          }
+          .contentShape(Rectangle())
+          .padding()
+
           DemoHSplit(store: inner)
             .splitViewConfiguration(.init(
               orientation: .horizontal,
-              minimumPrimaryFraction: 0.3,
-              minimumSecondaryFraction: 0.3,
+              draggableRange: 0.3...0.7,
               dragToHidePanes: .both,
+              doubleClickToClose: .left,
               visibleDividerSpan: 4
             ))
         }
@@ -293,9 +290,9 @@ private struct DemoVSplit: View {
         .background(Color.brown)
       }.splitViewConfiguration(.init(
         orientation: .vertical,
-        minimumPrimaryFraction: 0.3,
-        minimumSecondaryFraction: 0.3,
+        draggableRange: 0.3...0.7,
         dragToHidePanes: .bottom,
+        doubleClickToClose: .bottom,
         visibleDividerSpan: 4
       ))
       // Collection of buttons that toggles pane visibility and shows current state.
@@ -304,31 +301,40 @@ private struct DemoVSplit: View {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
         } label: {
           Text("Top")
-            .foregroundStyle(store.panesVisible.primary ? Color.orange : Color.accentColor)
+            .foregroundStyle(store.panesVisible.primary ? Color.accentColor : Color.orange)
             .animation(.smooth, value: store.panesVisible)
         }
         Button {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .primary : .both))
         } label: {
           Text("Bottom")
-            .foregroundStyle(store.panesVisible.secondary ? Color.orange : Color.accentColor)
+            .foregroundStyle(store.panesVisible.secondary ? Color.accentColor : Color.orange)
             .animation(.smooth, value: store.panesVisible)
         }
         Button {
           inner.send(.updatePanesVisibility(inner.panesVisible.both ? .secondary : .both))
         } label: {
           Text("Left")
-            .foregroundStyle(inner.panesVisible.primary ? Color.orange : Color.accentColor)
+            .foregroundStyle(inner.panesVisible.primary ? Color.accentColor : Color.orange)
             .animation(.smooth, value: store.panesVisible)
         }
         Button {
           inner.send(.updatePanesVisibility(inner.panesVisible.both ? .primary : .both))
         } label: {
           Text("Right")
-            .foregroundStyle(inner.panesVisible.secondary ? Color.orange : Color.accentColor)
+            .foregroundStyle(inner.panesVisible.secondary ? Color.accentColor : Color.orange)
             .animation(.smooth, value: store.panesVisible)
         }
       }.padding([.bottom], 8)
+    }
+  }
+
+  private func button(_ side: String, pane: SplitViewPanes) -> some View {
+    Button {
+      store.send(.updatePanesVisibility(store.panesVisible.both ? pane : .both))
+    } label: {
+      Text(store.panesVisible.both ? "Hide \(side)" : "Show \(side)")
+        .foregroundStyle(Color.blue)
     }
   }
 }
@@ -345,8 +351,7 @@ struct SplitView_Previews: PreviewProvider {
       Text("World!")
     }).splitViewConfiguration(.init(
       orientation: .horizontal,
-      minimumPrimaryFraction: 0.1,
-      minimumSecondaryFraction: 0.1
+      draggableRange: 0.1...0.9
     ))
     SplitView(store: Store(initialState: .init()) {
       SplitViewReducer()
@@ -358,8 +363,7 @@ struct SplitView_Previews: PreviewProvider {
       Text("World!")
     }).splitViewConfiguration(.init(
       orientation: .vertical,
-      minimumPrimaryFraction: 0.1,
-      minimumSecondaryFraction: 0.1
+      draggableRange: 0.1...0.9
     ))
     DemoVSplit(
       store: Store(initialState: .init()) { SplitViewReducer() },

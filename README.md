@@ -10,7 +10,8 @@ This is a custom SwiftUI view that manages the layout of two child views ("panes
 [Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) for Swift by
 [Point-Free](https://www.pointfree.co) for handling state.
 
-The three views are provided to a [SplitView](Sources/brh-splitview/SplitView.swift) instance via SwiftUI @ViewBuilder arguments:
+The three views are provided to a [SplitView](Sources/brh-splitview/SplitViewFeature.swift) instance via SwiftUI
+@ViewBuilder arguments:
 
 ```
 public var body: some View {
@@ -39,26 +40,32 @@ And below shows the iOS example:
 * Divider and child views are any SwiftUI `@ViewBuilder` values you provide to the `SplitView` view constructor.
 * Inject custom configurations through the `.splitViewConfiguration` View modifier.
 * Dividers can close either or both child views if you drag the divider over a certain amount of the child view pane.
+* Blurs the child view pane that will be closed.
 * Double-clicking on a divider can close a view as well.
 * State of child pane visibility is available for tracking in the SplitView's store.
 
 # Configuration
 
-The [SplitViewConfiguration](Sources/brh-splitview/SplitViewConfiguration.swift) struct controls the layout and behavior of the views. It currently
-has the following attributes:
+The [SplitViewConfiguration](Sources/brh-splitview/SplitViewConfiguration.swift) struct controls the layout and 
+behavior of the views. It currently has the following attributes:
 
 * orientation -- the layout of the child views (`.horizontal` or `.vertical`)
 * minimumPrimaryFraction (Double) -- minimum size of the primary child pane
 * minimumSecondaryFraction (Double) -- minimum size of the secondary child pane
-* dragToHidePanes ([SplitViewPanes](Sources/brh-splitview/SplitViewPanes.swift)) -- which child panes can be closed by dragging
-* visibleDividerSpan (Double) -- the width or height of the divider. Dividers can draw outside of this span, including defining a bigger area for
-  touch tracking.
+* dragToHidePanes ([SplitViewPanes](Sources/brh-splitview/SplitViewPanes.swift)) -- which child panes can be closed by 
+  dragging into their minimum area. By default none are.
+* doubleClickToClose ([SplitViewPanes](Sources/brh-splitview/SplitViewPanes.swift)) -- which child pane to close when
+  the divider is double-tapped/clicked. By default none are.
+* visibleDividerSpan (Double) -- the width or height of the divider. Dividers can draw outside of this span, including 
+  defining a bigger area for touch tracking.
 
 # Divider Examples
 
 The source currently contains three divider views:
 
-* [Debug](Sources/brh-splitview/Dividers/Debug.swift) -- used during development with separate views for the divider and the hit tracking area.
-* [Minimal](Sources/brh-splitview/Dividers/Minimal.swift) -- just draws a solid line. The line width and the color are configurable.
-* [Handle](Sources/brh-splitview/Dividers/Handle.swift) -- draws a solid line as well as a handle that serves as a visual hint that the divider can be
-  dragged by the user.
+* [Debug](Sources/brh-splitview/Dividers/Debug.swift) -- used during development with separate views for the divider 
+  and the hit tracking area.
+* [Minimal](Sources/brh-splitview/Dividers/Minimal.swift) -- just draws a solid line. The line width and the color are 
+  configurable.
+* [Handle](Sources/brh-splitview/Dividers/Handle.swift) -- draws a solid line as well as a handle that serves as a 
+  visual hint that the divider can be dragged by the user.
