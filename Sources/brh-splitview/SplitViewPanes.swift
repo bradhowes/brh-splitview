@@ -1,7 +1,9 @@
+// Copyright © 2025 Brad Howes. All rights reserved.
+
 /**
  The indication of the visible panes in a split view. The `primary` is the left or top view
  and `secondary` is the other one. There are aliases for `left`, `right`, `top`, and `bottom` and
- definitions for `none` and `both`. In the SptiView code, only `primary` and `secondary` are referenced.
+ definitions for `none` and `both`.
  */
 public struct SplitViewPanes: OptionSet, Sendable, Equatable {
   public let rawValue: Int

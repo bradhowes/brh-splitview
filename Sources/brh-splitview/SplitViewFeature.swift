@@ -1,3 +1,5 @@
+// Copyright © 2025 Brad Howes. All rights reserved.
+
 import ComposableArchitecture
 import SwiftUI
 
@@ -6,28 +8,21 @@ public struct SplitViewReducer {
 
   @ObservableState
   public struct State: Equatable {
-    public let orientation: SplitViewOrientation
-    public let constraints: SplitViewConstraints
     public var panesVisible: SplitViewPanes
     public var position: Double
 
     // Drag-gesture state. Unable to move into a @GestureState struct since its lifetime is not long enough to be
     // useful.
-    public var highlightSide: SplitViewPanes
+    public var highlightPane: SplitViewPanes = []
     @ObservationStateIgnored public var initialPosition: Double?
     @ObservationStateIgnored public var lastPosition: Double = .zero
 
     public init(
-      orientation: SplitViewOrientation,
-      constraints: SplitViewConstraints = .init(),
       panesVisible: SplitViewPanes = .both,
-      position: Double = 0.5
+      initialPosition: Double = 0.5
     ) {
-      self.orientation = orientation
-      self.constraints = constraints
       self.panesVisible = panesVisible
-      self.position = position
-      self.highlightSide = []
+      self.position = initialPosition
     }
   }
 
@@ -66,14 +61,14 @@ public struct SplitViewReducer {
 
   private func dragEnd(_ state: inout State, position: Double, visible: SplitViewPanes) -> Effect<Action> {
     state.initialPosition = nil
-    state.highlightSide = []
+    state.highlightPane = []
     state.position = position
     return updateVisiblePanes(&state, panes: visible)
   }
 
   private func dragMove(_ state: inout State, position: Double, willHide: SplitViewPanes) -> Effect<Action> {
     state.position = position
-    state.highlightSide = willHide
+    state.highlightPane = willHide
     return .none
   }
 
@@ -94,11 +89,11 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
   private let primaryContent: () -> P
   private let secondaryContent: () -> S
   private let dividerContent: () -> D
+  @Environment(\.splitViewConfiguration) private var config
 
-  private var orientation: SplitViewOrientation { store.orientation }
-  private var constraints: SplitViewConstraints { store.constraints }
+  private var orientation: SplitViewOrientation { config.orientation }
   private var panesVisible: SplitViewPanes { store.panesVisible }
-  private var highlightSide: SplitViewPanes { store.highlightSide }
+  private var highlightSide: SplitViewPanes { store.highlightPane }
 
   public init(
     store: StoreOf<SplitViewReducer>,
@@ -119,7 +114,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
       let width = size.width
       let height = size.height
       let span: Double = orientation.horizontal ? width : height
-      let handleSpan: Double = constraints.visibleSpan
+      let handleSpan: Double = config.visibleDividerSpan
       let handleSpan2: Double = handleSpan / 2
       let dividerPos = (store.position * span).clamped(to: 0...span)
       let primarySpan = dividerPos - handleSpan2
@@ -167,9 +162,9 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
           .position(dividerPt)
           .zIndex(panesVisible.both ? 1 : -2)
           .onTapGesture(count: 2) {
-            if constraints.dragToHide.contains(.primary) {
+            if config.dragToHidePanes.contains(.primary) {
               store.send(.updatePanesVisibility(.secondary))
-            } else if constraints.dragToHide.contains(.secondary) {
+            } else if config.dragToHidePanes.contains(.secondary) {
               store.send(.updatePanesVisibility(.primary))
             }
           }
@@ -214,10 +209,10 @@ extension SplitView {
       }
   }
 
-  private var minPrimarySpan: Double { constraints.minPrimaryFraction }
-  private var maxSecondarySpan: Double { 1.0 - constraints.minSecondaryFraction }
-  private var lowerBound: Double { constraints.dragToHide.contains(.primary) ? 0.0 : minPrimarySpan }
-  private var upperBound: Double { constraints.dragToHide.contains(.secondary) ? 1.0 : maxSecondarySpan }
+  private var minPrimarySpan: Double { config.minimumPrimaryFraction }
+  private var maxSecondarySpan: Double { 1.0 - config.minimumSecondaryFraction }
+  private var lowerBound: Double { config.dragToHidePanes.contains(.primary) ? 0.0 : minPrimarySpan }
+  private var upperBound: Double { config.dragToHidePanes.contains(.secondary) ? 1.0 : maxSecondarySpan }
 }
 
 private struct DemoHSplit: View {
@@ -237,7 +232,7 @@ private struct DemoHSplit: View {
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(Color.green)
     } divider: {
-      HandleDivider(for: .horizontal, dividerConstraints: store.constraints) // DebugDivider(for: .horizontal)
+      HandleDivider() // DebugDivider()
     } secondary: {
       VStack {
         Button(store.panesVisible.both ? "Hide Left" : "Show Left") {
@@ -265,7 +260,7 @@ private struct DemoVSplit: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.mint)
       } divider: {
-        HandleDivider(for: .vertical, dividerConstraints: store.constraints) // DebugDivider(for: .vertical)
+        HandleDivider() // DebugDivider()
       } secondary: {
         HStack {
           VStack {
@@ -274,10 +269,23 @@ private struct DemoVSplit: View {
             }
           }.contentShape(Rectangle())
           DemoHSplit(store: inner)
+            .splitViewConfiguration(.init(
+              orientation: .horizontal,
+              minimumPrimaryFraction: 0.3,
+              minimumSecondaryFraction: 0.3,
+              dragToHidePanes: .both,
+              visibleDividerSpan: 4
+            ))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.teal)
-      }
+      }.splitViewConfiguration(.init(
+        orientation: .vertical,
+        minimumPrimaryFraction: 0.3,
+        minimumSecondaryFraction: 0.3,
+        dragToHidePanes: .bottom,
+        visibleDividerSpan: 4
+      ))
       HStack {
         Button {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .secondary : .both))
@@ -314,33 +322,29 @@ private struct DemoVSplit: View {
 
 struct SplitView_Previews: PreviewProvider {
   static var previews: some View {
+    SplitView(store: Store(initialState: .init()) {
+      SplitViewReducer()
+    }, primary: {
+      Text("Hello")
+    }, divider: {
+      MinimalDivider()
+    }, secondary: {
+      Text("World!")
+    })
+    .environment(\.splitViewConfiguration, .init())
+    SplitView(store: Store(initialState: .init()) {
+      SplitViewReducer()
+    }, primary: {
+      Text("Hello")
+    }, divider: {
+      MinimalDivider()
+    }, secondary: {
+      Text("World!")
+    })
+    .environment(\.splitViewConfiguration, .init(orientation: .vertical))
     DemoVSplit(
-      store: Store(initialState: .init(
-        orientation: .vertical,
-        constraints: .init(
-          minPrimaryFraction: 0.3,
-          minSecondaryFraction: 0.3,
-          dragToHide: .both,
-          visibleSpan: 4
-        )
-      )) { SplitViewReducer() },
-      inner: Store(initialState: .init(
-        orientation: .horizontal,
-        constraints: .init(
-          minPrimaryFraction: 0.3,
-          minSecondaryFraction: 0.3,
-          dragToHide: .both,
-          visibleSpan: 4.0
-        )
-      )) { SplitViewReducer() }
+      store: Store(initialState: .init()) { SplitViewReducer() },
+      inner: Store(initialState: .init()) { SplitViewReducer() }
     )
   }
-}
-
-private extension Comparable {
-  func clamped(to limits: ClosedRange<Self>) -> Self { min(max(self, limits.lowerBound), limits.upperBound) }
-}
-
-private extension ClosedRange {
-  func clamp(value : Bound) -> Bound { value.clamped(to: self) }
 }

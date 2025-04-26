@@ -1,28 +1,25 @@
+// Copyright © 2025 Brad Howes. All rights reserved.
+
 import SwiftUI
 
 /**
  Divider view that provides a handle for dragging.
  */
-struct HandleDivider: View {
-  let orientation: SplitViewOrientation
-  let dividerConstraints: SplitViewConstraints
+public struct HandleDivider: View {
   let dividerColor: Color
   let handleColor: Color
   let handleLength: Double
   let handleWidth: Double
   let paddingInsets: Double
+  @Environment(\.splitViewConfiguration) var config
 
-  init(
-    for orientation: SplitViewOrientation,
-    dividerConstraints: SplitViewConstraints,
+  public init(
     dividerColor: Color = .gray,
-    handleColor: Color = .indigo,
+    handleColor: Color = .yellow,
     handleLength: Double = 32.0,
     handleWidth: Double = 12.0,
     paddingInsets: Double = 6.0
   ) {
-    self.orientation = orientation
-    self.dividerConstraints = dividerConstraints
     self.dividerColor = .gray
     self.handleColor = handleColor
     self.handleLength = handleLength
@@ -30,14 +27,14 @@ struct HandleDivider: View {
     self.paddingInsets = paddingInsets
   }
 
-  var body: some View {
+  public var body: some View {
     ZStack {
-      switch orientation {
+      switch config.orientation {
       case .horizontal:
 
         Rectangle()
           .fill(dividerColor)
-          .frame(width: dividerConstraints.visibleSpan)
+          .frame(width: config.visibleDividerSpan)
           .padding(0)
           .contentShape(.interaction, Rectangle())
           .frame(width: handleWidth * 2)
@@ -58,7 +55,7 @@ struct HandleDivider: View {
 
         Rectangle()
           .fill(dividerColor)
-          .frame(height: dividerConstraints.visibleSpan)
+          .frame(height: config.visibleDividerSpan)
           .padding(0)
           .contentShape(.interaction, Rectangle())
           .frame(height: handleWidth * 2)
