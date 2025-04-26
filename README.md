@@ -50,10 +50,11 @@ The [SplitViewConfiguration](Sources/brh-splitview/SplitViewConfiguration.swift)
 behavior of the views. It currently has the following attributes:
 
 * orientation -- the layout of the child views (`.horizontal` or `.vertical`)
-* minimumPrimaryFraction (Double) -- minimum size of the primary child pane
-* minimumSecondaryFraction (Double) -- minimum size of the secondary child pane
+* draggableRange (ClosedRange) -- the range that the divider can be moved over. If `dragToHidePanes` (below) is
+empty then dragging is limited to this. Otherwise, dragging outside of this range will result in closing a
+child pane.
 * dragToHidePanes ([SplitViewPanes](Sources/brh-splitview/SplitViewPanes.swift)) -- which child panes can be closed by 
-  dragging into their minimum area. By default none are.
+  dragging into their minimum area. By default none are. Affects the behavior of the `draggableRange` above.
 * doubleClickToClose ([SplitViewPanes](Sources/brh-splitview/SplitViewPanes.swift)) -- which child pane to close when
   the divider is double-tapped/clicked. By default none are.
 * visibleDividerSpan (Double) -- the width or height of the divider. Dividers can draw outside of this span, including 
