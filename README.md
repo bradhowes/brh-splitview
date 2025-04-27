@@ -42,7 +42,7 @@ And below shows the iOS example:
 * Dividers can close either or both child views if you drag the divider over a certain amount of the child view pane.
 * Blurs the child view pane that will be closed.
 * Double-clicking on a divider can close a view as well.
-* State of child pane visibility is available for tracking in the SplitView's store.
+* State of child pane visibility is available for tracking and manipulation in the SplitView's TCA store.
 
 # Configuration
 
