@@ -148,7 +148,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
   }
 
   public var body: some View {
-    let _ = Self._printChanges()
+    // let _ = Self._printChanges()
     GeometryReader { geometry in
       let size = geometry.size
       let width = size.width

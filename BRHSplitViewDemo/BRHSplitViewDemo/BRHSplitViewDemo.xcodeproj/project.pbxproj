@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BDCFBAE02DBD5DEF00606C7A /* BRHSplitview in Frameworks */ = {isa = PBXBuildFile; productRef = BDCFBADF2DBD5DEF00606C7A /* BRHSplitview */; };
-		BDCFBAE52DBD5E5A00606C7A /* BRHSplitview in Frameworks */ = {isa = PBXBuildFile; productRef = BDCFBAE42DBD5E5A00606C7A /* BRHSplitview */; };
+		BD40A86E2DBEE07400521B51 /* BRHSplitView in Frameworks */ = {isa = PBXBuildFile; productRef = BD40A86D2DBEE07400521B51 /* BRHSplitView */; };
 		BDCFBAE82DBD5F2F00606C7A /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = BDCFBAE72DBD5F2F00606C7A /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
@@ -58,9 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDCFBAE02DBD5DEF00606C7A /* BRHSplitview in Frameworks */,
-				BDCFBAE52DBD5E5A00606C7A /* BRHSplitview in Frameworks */,
 				BDCFBAE82DBD5F2F00606C7A /* ComposableArchitecture in Frameworks */,
+				BD40A86E2DBEE07400521B51 /* BRHSplitView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,12 +79,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BD40A86C2DBEE07400521B51 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BDCFBAAA2DBD5DBB00606C7A = {
 			isa = PBXGroup;
 			children = (
 				BDCFBAB52DBD5DBB00606C7A /* BRHSplitViewDemo */,
 				BDCFBAC42DBD5DBD00606C7A /* BRHSplitViewDemoTests */,
 				BDCFBACE2DBD5DBD00606C7A /* BRHSplitViewDemoUITests */,
+				BD40A86C2DBEE07400521B51 /* Frameworks */,
 				BDCFBAB42DBD5DBB00606C7A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -121,9 +127,8 @@
 			);
 			name = BRHSplitViewDemo;
 			packageProductDependencies = (
-				BDCFBADF2DBD5DEF00606C7A /* BRHSplitview */,
-				BDCFBAE42DBD5E5A00606C7A /* BRHSplitview */,
 				BDCFBAE72DBD5F2F00606C7A /* ComposableArchitecture */,
+				BD40A86D2DBEE07400521B51 /* BRHSplitView */,
 			);
 			productName = BRHSplitViewDemo;
 			productReference = BDCFBAB32DBD5DBB00606C7A /* BRHSplitViewDemo.app */;
@@ -629,13 +634,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		BDCFBADF2DBD5DEF00606C7A /* BRHSplitview */ = {
+		BD40A86D2DBEE07400521B51 /* BRHSplitView */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = BRHSplitview;
-		};
-		BDCFBAE42DBD5E5A00606C7A /* BRHSplitview */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = BRHSplitview;
+			package = BDCFBAE32DBD5E5A00606C7A /* XCLocalSwiftPackageReference "../../../brh-splitview" */;
+			productName = BRHSplitView;
 		};
 		BDCFBAE72DBD5F2F00606C7A /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
