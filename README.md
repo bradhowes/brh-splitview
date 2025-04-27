@@ -64,7 +64,7 @@ child pane.
 
 The source currently contains three divider views:
 
-* [Debug](Sources/brh-splitview/Dividers/Debug.swift) -- used during development with separate views for the divider 
+* [Debug](Sources/brh-splitview/Dividers/Debug.swift) -- used during development with separate overlapping regions for the divider 
   and the hit tracking area.
 * [Minimal](Sources/brh-splitview/Dividers/Minimal.swift) -- just draws a solid line. The line width and the color are 
   configurable.
