@@ -202,7 +202,8 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
 
         dividerContent()
           .position(dividerPt)
-          .zIndex(panesVisible.both ? 1 : -2)
+          .opacity(panesVisible.both ? 1 : 0)
+          .allowsHitTesting(panesVisible.both)
           .onTapGesture(count: 2) {
             store.send(.doubleClicked(config: config))
           }
