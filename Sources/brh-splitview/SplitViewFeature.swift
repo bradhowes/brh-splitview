@@ -157,37 +157,29 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
       let handleSpan: Double = config.visibleDividerSpan
       let handleSpan2: Double = handleSpan / 2
       let dividerPos = (store.position * span).clamped(to: 0...span)
-      let primarySpan = dividerPos - handleSpan2
+      let primarySpan = (dividerPos - handleSpan2).clamped(to: 0...span)
       let primaryAndHandleSpan = primarySpan + handleSpan
-      let secondarySpan = span - primaryAndHandleSpan
+      let secondarySpan = (span - primaryAndHandleSpan).clamped(to: 0...span)
 
-      let primaryFrame: CGSize =
-        orientation.horizontal
+      let primaryFrame: CGSize = orientation.horizontal
         ? .init(width: panesVisible.secondary ? primarySpan : span, height: height)
         : .init(width: width, height: panesVisible.secondary ? primarySpan : span)
 
-      let primaryOffset: CGSize =
-        orientation.horizontal
+      let primaryOffset: CGSize = orientation.horizontal
         ? .init(width: panesVisible.primary ? 0 : -primaryAndHandleSpan, height: 0)
         : .init(width: 0, height: panesVisible.primary ? 0 : -primaryAndHandleSpan)
 
-      let secondaryFrame: CGSize =
-        orientation.horizontal
+      let secondaryFrame: CGSize = orientation.horizontal
         ? .init(width: panesVisible.primary ? secondarySpan : span, height: height)
         : .init(width: width, height: panesVisible.primary ? secondarySpan : span)
 
-      let secondaryOffsetSpan =
-        panesVisible.both ? primaryAndHandleSpan : (panesVisible.primary ? span + handleSpan : 0)
-      let secondaryOffset: CGSize =
-        orientation.horizontal
+      let secondaryOffsetSpan = panesVisible.both ? primaryAndHandleSpan : panesVisible.primary ? span + handleSpan : 0
+      let secondaryOffset: CGSize = orientation.horizontal
         ? .init(width: secondaryOffsetSpan, height: 0)
         : .init(width: 0, height: secondaryOffsetSpan)
 
-      let dividerOffset =
-        (panesVisible.both
-          ? dividerPos : (panesVisible.primary ? span + handleSpan2 : -handleSpan2))
-      let dividerPt: CGPoint =
-        orientation.horizontal
+      let dividerOffset = panesVisible.both ? dividerPos : panesVisible.primary ? span + handleSpan2 : -handleSpan2
+      let dividerPt: CGPoint = orientation.horizontal
         ? .init(x: dividerOffset, y: height / 2)
         : .init(x: width / 2, y: dividerOffset)
 
@@ -195,6 +187,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
         primaryContent()
           .zIndex(panesVisible.primary ? 0 : -1)
           .frame(width: primaryFrame.width, height: primaryFrame.height)
+          .clipped()
           .blur(radius: highlightSide == .primary ? 3 : 0, opaque: false)
           .offset(primaryOffset)
           .allowsHitTesting(panesVisible.primary)
@@ -202,6 +195,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
         secondaryContent()
           .zIndex(panesVisible.secondary ? 0 : -1)
           .frame(width: secondaryFrame.width, height: secondaryFrame.height)
+          .clipped()
           .blur(radius: highlightSide == .secondary ? 3 : 0, opaque: false)
           .offset(secondaryOffset)
           .allowsHitTesting(panesVisible.secondary)
@@ -218,6 +212,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
       }
       .frame(width: width, height: height)
       .clipped()
+      .animation(.smooth, value: store.highlightPane)
       .animation(.smooth, value: store.panesVisible)
     }
   }
@@ -225,12 +220,20 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
 
 extension SplitView {
 
+  private func calcSecondaryFrame(_ secondarySpan: Double, span: Double, height: Double, width: Double) -> CGSize {
+    let value: CGSize = orientation.horizontal
+    ? .init(width: panesVisible.primary ? secondarySpan : span, height: height)
+    : .init(width: width, height: panesVisible.primary ? secondarySpan : span)
+    print("secondaryFrame: \(value)")
+    assert(value.width >= 0)
+    assert(value.height >= 0)
+    return value
+  }
+
   private func drag(in span: Double, change: KeyPath<DragGesture.Value, CGFloat>) -> some Gesture {
     DragGesture(coordinateSpace: .global)
       .onChanged { gesture in
-        store.send(
-          .dragOnChanged(
-            dragState: .init(config: config, span: span, change: gesture[keyPath: change])))
+        store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: gesture[keyPath: change])))
       }
       .onEnded { _ in
         store.send(.dragOnEnded(config: config))

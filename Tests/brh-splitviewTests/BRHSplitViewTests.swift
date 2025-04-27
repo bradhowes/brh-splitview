@@ -321,6 +321,37 @@ import Testing
     assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
   }
 
+  @Test func verticalPreviewHighlightPrimary() async throws {
+    let config = SplitViewConfiguration(
+      orientation: .horizontal,
+      draggableRange: 0.4...0.6,
+      dragToHidePanes: .both
+    )
+
+    let store = Store(initialState: .init(panesVisible: .both)) {
+      SplitViewReducer()
+    }
+    let view = Group {
+      SplitView(store: store,
+        primary: {
+          Text("Hello")
+        },
+        divider: {
+          MinimalDivider()
+        },
+        secondary: {
+          Text("World!")
+        }
+      ).splitViewConfiguration(config)
+    }.frame(width: 500, height: 500)
+      .background(Color.white)
+      .environment(\.colorScheme, ColorScheme.light)
+    store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: 0.0)))
+    store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: -150.0)))
+    #expect(store.highlightPane == .primary)
+    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+  }
+
   @Test func demoPreview() throws {
     let view = Group {
       SplitViewPreviews.demo
