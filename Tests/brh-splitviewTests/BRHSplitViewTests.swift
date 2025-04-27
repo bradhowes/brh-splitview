@@ -3,7 +3,7 @@ import SnapshotTesting
 import SwiftUI
 import Testing
 
-@testable import BRHSplitview
+@testable import BRHSplitView
 
 @Suite("SplitViewConfiguration") struct SplitViewConfigurationTests {
 

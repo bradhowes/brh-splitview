@@ -6,7 +6,7 @@ let package = Package(
   name: "brh-splitview",
   platforms: [.iOS(.v18), .macOS(.v15)],
   products: [
-    .library(name: "BRHSplitview", targets: ["BRHSplitview"])
+    .library(name: "BRHSplitView", targets: ["BRHSplitView"])
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.19.0"),
@@ -14,15 +14,15 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "BRHSplitview",
+      name: "BRHSplitView",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
       ]
     ),
     .testTarget(
-      name: "BRHSplitviewTests",
+      name: "BRHSplitViewTests",
       dependencies: [
-        "BRHSplitview", .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        "BRHSplitView", .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
       ]
     ),
   ]
