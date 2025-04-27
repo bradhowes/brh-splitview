@@ -72,12 +72,6 @@ public struct SplitViewReducer {
     return .none
   }
 
-  private func dragMove(_ state: inout State, position: Double, willHide: SplitViewPanes) -> Effect<Action> {
-    state.position = position
-    state.highlightPane = willHide
-    return .none
-  }
-
   private func dragOnChanged(_ state: inout State, dragState: DragState) -> Effect<Action> {
     if let initialPosition = state.initialPosition {
       // Calculate new normalized position [0.0-1.0] of the divider

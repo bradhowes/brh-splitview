@@ -1,3 +1,4 @@
+import ComposableArchitecture
 import SnapshotTesting
 import SwiftUI
 import Testing
@@ -74,6 +75,122 @@ import Testing
 @MainActor
 @Suite("SplitViewFeature") struct SplitViewFeatureTests {
 
+  struct Run {
+    let doubleClickToClose: SplitViewPanes
+    let expected: SplitViewPanes
+  }
+
+  @Test("doubleClick does nothing")
+  func testDoubleClickDoesNothing() async throws {
+    let config = SplitViewConfiguration(
+      orientation: .horizontal,
+      draggableRange: 0.3...0.6,
+      dragToHidePanes: .none, doubleClickToClose: .none, visibleDividerSpan: 4.0
+    )
+    let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
+    await store.send(.doubleClicked(config: config))
+  }
+
+  @Test("doubleClick closes", arguments: [
+    Run(doubleClickToClose: .primary, expected: .secondary),
+    Run(doubleClickToClose: .secondary, expected: .primary),
+    Run(doubleClickToClose: .both, expected: .primary)
+  ])
+  func testDoubleClickAction(run: Run) async throws {
+    let config = SplitViewConfiguration(
+      orientation: .horizontal,
+      draggableRange: 0.3...0.6,
+      dragToHidePanes: .none, doubleClickToClose: run.doubleClickToClose, visibleDividerSpan: 4.0
+    )
+    let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
+    await store.send(.doubleClicked(config: config)) {
+      $0.panesVisible = run.expected
+    }
+    await store.receive(.delegate(.panesVisibilityChanged(run.expected)))
+  }
+
+  @Test("drag is constrained")
+  func dragDoesNothing() async throws {
+    let config = SplitViewConfiguration(
+      orientation: .horizontal,
+      draggableRange: 0.3...0.6,
+      dragToHidePanes: .none, doubleClickToClose: .none, visibleDividerSpan: 4.0
+    )
+    let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 0.0))) {
+      $0.initialPosition = 50.0
+      $0.lastPosition = 0.5
+    }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: -50.0))) {
+      $0.position = config.draggableRange.lowerBound
+    }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 100.0))) {
+      $0.position = config.draggableRange.upperBound
+    }
+    await store.send(.dragOnEnded(config: config)) {
+      $0.initialPosition = nil
+    }
+  }
+
+  @Test("drag will hide secondary")
+  func dragWillHideSecondary() async throws {
+    let config = SplitViewConfiguration(
+      orientation: .horizontal,
+      draggableRange: 0.3...0.6,
+      dragToHidePanes: .secondary, doubleClickToClose: .none, visibleDividerSpan: 4.0
+    )
+    let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 0.0))) {
+      $0.initialPosition = 50.0
+      $0.lastPosition = 0.5
+    }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: -40.0))) {
+      $0.lastPosition = 0.5
+      $0.position = config.draggableRange.lowerBound
+    }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 40.0))) {
+      $0.position = 0.9
+      $0.highlightPane = .secondary
+    }
+    await store.send(.dragOnEnded(config: config)) {
+      $0.position = 0.5
+      $0.panesVisible = .primary
+      $0.highlightPane = .none
+      $0.initialPosition = nil
+    }
+    await store.receive(.delegate(.panesVisibilityChanged(.primary)))
+  }
+
+  @Test("drag will hide primary")
+  func dragWillHidePrimary() async throws {
+    let config = SplitViewConfiguration(
+      orientation: .horizontal,
+      draggableRange: 0.3...0.6,
+      dragToHidePanes: .primary, doubleClickToClose: .none, visibleDividerSpan: 4.0
+    )
+    let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 0.0))) {
+      $0.initialPosition = 50.0
+      $0.lastPosition = 0.5
+    }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 40.0))) {
+      $0.lastPosition = 0.5
+      $0.position = 0.6
+    }
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: -40.0))) {
+      $0.position = 0.1
+      $0.highlightPane = .primary
+    }
+    await store.send(.dragOnEnded(config: config)) {
+      $0.position = 0.5
+      $0.panesVisible = .secondary
+      $0.highlightPane = .none
+      $0.initialPosition = nil
+    }
+    await store.receive(.delegate(.panesVisibilityChanged(.secondary)))
+  }
+
+
 #if os(iOS)
 
   @Test func horizontalPreview() throws {
@@ -86,9 +203,117 @@ import Testing
     assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
   }
 
+  @Test func horizontalPreviewOnlyPrimary() throws {
+    let view = Group {
+      SplitView(
+        store: Store(initialState: .init(panesVisible: .primary)) {
+          SplitViewReducer()
+        },
+        primary: {
+          Text("Hello")
+        },
+        divider: {
+          MinimalDivider()
+        },
+        secondary: {
+          Text("World!")
+        }
+      ).splitViewConfiguration(
+        .init(
+          orientation: .horizontal,
+          draggableRange: 0.1...0.9
+        ))
+    }.frame(width: 500, height: 500)
+      .background(Color.white)
+      .environment(\.colorScheme, ColorScheme.light)
+
+    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+  }
+
+  @Test func horizontalPreviewOnlySecondary() throws {
+    let view = Group {
+      SplitView(
+        store: Store(initialState: .init(panesVisible: .secondary)) {
+          SplitViewReducer()
+        },
+        primary: {
+          Text("Hello")
+        },
+        divider: {
+          MinimalDivider()
+        },
+        secondary: {
+          Text("World!")
+        }
+      ).splitViewConfiguration(
+        .init(
+          orientation: .horizontal,
+          draggableRange: 0.1...0.9
+        ))
+    }.frame(width: 500, height: 500)
+      .background(Color.white)
+      .environment(\.colorScheme, ColorScheme.light)
+
+    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+  }
+
   @Test func verticalPreview() throws {
     let view = Group {
       SplitViewPreviews.vertical
+    }.frame(width: 500, height: 500)
+      .background(Color.white)
+      .environment(\.colorScheme, ColorScheme.light)
+
+    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+  }
+
+  @Test func verticalPreviewOnlyPrimary() throws {
+    let view = Group {
+      SplitView(
+        store: Store(initialState: .init(panesVisible: .primary)) {
+          SplitViewReducer()
+        },
+        primary: {
+          Text("Hello")
+        },
+        divider: {
+          MinimalDivider()
+        },
+        secondary: {
+          Text("World!")
+        }
+      ).splitViewConfiguration(
+        .init(
+          orientation: .vertical,
+          draggableRange: 0.1...0.9
+        ))
+    }.frame(width: 500, height: 500)
+      .background(Color.white)
+      .environment(\.colorScheme, ColorScheme.light)
+
+    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+  }
+
+  @Test func verticalPreviewOnlySecondary() throws {
+    let view = Group {
+      SplitView(
+        store: Store(initialState: .init(panesVisible: .secondary)) {
+          SplitViewReducer()
+        },
+        primary: {
+          Text("Hello")
+        },
+        divider: {
+          MinimalDivider()
+        },
+        secondary: {
+          Text("World!")
+        }
+      ).splitViewConfiguration(
+        .init(
+          orientation: .horizontal,
+          draggableRange: 0.1...0.9
+        ))
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
