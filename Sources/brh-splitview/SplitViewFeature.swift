@@ -220,16 +220,6 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
 
 extension SplitView {
 
-  private func calcSecondaryFrame(_ secondarySpan: Double, span: Double, height: Double, width: Double) -> CGSize {
-    let value: CGSize = orientation.horizontal
-    ? .init(width: panesVisible.primary ? secondarySpan : span, height: height)
-    : .init(width: width, height: panesVisible.primary ? secondarySpan : span)
-    print("secondaryFrame: \(value)")
-    assert(value.width >= 0)
-    assert(value.height >= 0)
-    return value
-  }
-
   private func drag(in span: Double, change: KeyPath<DragGesture.Value, CGFloat>) -> some Gesture {
     DragGesture(coordinateSpace: .global)
       .onChanged { gesture in
