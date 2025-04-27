@@ -1,4 +1,4 @@
-import BRHSplitview
+import BRHSplitView
 import ComposableArchitecture
 import SwiftUI
 
