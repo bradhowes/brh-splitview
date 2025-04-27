@@ -6,9 +6,8 @@
 # brh-splitview
 
 This is a custom SwiftUI view that manages the layout of two child views ("panes") by the position of a third 
-"divider" view. Uses the excellent 
-[Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) (TCA) for Swift by
-[Point-Free](https://www.pointfree.co) for handling state.
+"divider" view. Uses the [Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture) 
+(TCA) by [Point-Free](https://www.pointfree.co) for handling state.
 
 The three views are provided to a [SplitView](Sources/brh-splitview/SplitViewFeature.swift) instance via SwiftUI
 @ViewBuilder arguments:
