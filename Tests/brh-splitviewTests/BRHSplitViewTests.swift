@@ -349,7 +349,10 @@ import Testing
     store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: 0.0)))
     store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: -150.0)))
     #expect(store.highlightPane == .primary)
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    assertSnapshot(
+      of: view,
+      as: .image(traits: .init(userInterfaceStyle: .light))
+    )
   }
 
   @Test func demoPreview() throws {

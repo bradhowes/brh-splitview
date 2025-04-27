@@ -382,7 +382,8 @@ internal struct SplitViewPreviews {
     ).splitViewConfiguration(
       .init(
         orientation: .horizontal,
-        draggableRange: 0.1...0.9
+        draggableRange: 0.3...0.7,
+        dragToHidePanes: .both
       ))
   }
 
