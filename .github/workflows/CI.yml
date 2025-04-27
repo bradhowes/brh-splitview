@@ -18,12 +18,12 @@ jobs:
       run: defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
     - name: Build, test, and code coverage
       run: make
-    # - name: Create Coverage Badge
-    #   uses: schneegans/dynamic-badges-action@v1.7.0
-    #   with:
-    #     auth: ${{ secrets.GIST_UPDATE }}
-    #     gistID: 9216666566d5badd2c824d3524181378
-    #     filename: AUv3Support-coverage.json
-    #     label: Coverage
-    #     message: ${{ env.PERCENTAGE }}
-    #     color: success
+    - name: Create Coverage Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.GIST_UPDATE }}
+        gistID: 16c85b76b7ca6fa55902ac6661e3bfde
+        filename: AUv3Support-coverage.json
+        label: Coverage
+        message: ${{ env.PERCENTAGE }}
+        color: success
