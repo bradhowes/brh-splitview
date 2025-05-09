@@ -42,11 +42,10 @@ public struct SplitViewReducer {
     case dragOnChanged(dragState: DragState)
     case dragOnEnded(config: SplitViewConfiguration)
     case updatePanesVisibility(SplitViewPanes)
-  }
 
-  @CasePathable
-  public enum Delegate: Equatable {
-    case panesVisibilityChanged(SplitViewPanes)
+    public enum Delegate: Equatable {
+      case stateChanged(panesVisible: SplitViewPanes, position: Double)
+    }
   }
 
   public init() {}
@@ -109,13 +108,17 @@ public struct SplitViewReducer {
 
   private func updatePosition(_ state: inout State, position: Double, panes: SplitViewPanes) -> Effect<Action> {
     state.position = position
-    return updateVisiblePanes(&state, panes: panes)
+    if state.panesVisible == panes {
+      return .send(.delegate(.stateChanged(panesVisible: panes, position: state.position)))
+    } else {
+      return updateVisiblePanes(&state, panes: panes)
+    }
   }
 
   private func updateVisiblePanes(_ state: inout State, panes: SplitViewPanes) -> Effect<Action> {
     guard state.panesVisible != panes else { return .none }
     state.panesVisible = panes
-    return .send(.delegate(.panesVisibilityChanged(panes)))
+    return .send(.delegate(.stateChanged(panesVisible: panes, position: state.position)))
   }
 }
 
@@ -207,7 +210,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
           .onTapGesture(count: 2) {
             store.send(.doubleClicked(config: config))
           }
-          .simultaneousGesture(
+          .highPriorityGesture(
             drag(in: span, change: orientation.horizontal ? \.translation.width : \.translation.height)
           )
       }

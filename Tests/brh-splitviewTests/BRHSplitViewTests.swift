@@ -106,7 +106,7 @@ import Testing
     await store.send(.doubleClicked(config: config)) {
       $0.panesVisible = run.expected
     }
-    await store.receive(.delegate(.panesVisibilityChanged(run.expected)))
+    await store.receive(.delegate(.stateChanged(panesVisible: run.expected, position: 0.5)))
   }
 
   @Test("drag is constrained")
@@ -130,6 +130,7 @@ import Testing
     await store.send(.dragOnEnded(config: config)) {
       $0.initialPosition = nil
     }
+    await store.receive(.delegate(.stateChanged(panesVisible: .both, position: 0.6)))
   }
 
   @Test("drag will hide secondary")
@@ -158,7 +159,8 @@ import Testing
       $0.highlightPane = .none
       $0.initialPosition = nil
     }
-    await store.receive(.delegate(.panesVisibilityChanged(.primary)))
+    await store.receive(.delegate(.stateChanged(panesVisible: .primary, position: 0.5)))
+//    await store.receive(.delegate(.positionChanged(0.0)))
   }
 
   @Test("drag will hide primary")
@@ -187,7 +189,7 @@ import Testing
       $0.highlightPane = .none
       $0.initialPosition = nil
     }
-    await store.receive(.delegate(.panesVisibilityChanged(.secondary)))
+    await store.receive(.delegate(.stateChanged(panesVisible: .secondary, position: 0.5)))
   }
 
 
