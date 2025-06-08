@@ -47,7 +47,9 @@ public struct HandleDivider: View {
           .frame(width: handleWidth, height: handleLength)
           .padding(EdgeInsets(top: paddingInsets, leading: 0, bottom: paddingInsets, trailing: 0))
 
-        VStack {
+        VStack(spacing: 8) {
+          Color(dotColor)
+            .frame(width: 2, height: 2)
           Color(dotColor)
             .frame(width: 2, height: 2)
           Color(dotColor)
@@ -68,7 +70,9 @@ public struct HandleDivider: View {
           .frame(width: handleLength, height: handleWidth)
           .padding(EdgeInsets(top: 0, leading: paddingInsets, bottom: 0, trailing: paddingInsets))
 
-        HStack {
+        HStack(spacing: 8) {
+          Color(dotColor)
+            .frame(width: 2, height: 2)
           Color(dotColor)
             .frame(width: 2, height: 2)
           Color(dotColor)
