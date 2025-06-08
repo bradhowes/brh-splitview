@@ -364,7 +364,9 @@ import Testing
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
 
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
 #endif
