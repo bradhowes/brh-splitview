@@ -8,6 +8,7 @@ import SwiftUI
 public struct HandleDivider: View {
   private let dividerColor: Color
   private let handleColor: Color
+  private let dotColor: Color
   private let handleLength: Double
   private let handleWidth: Double
   private let paddingInsets: Double
@@ -16,12 +17,14 @@ public struct HandleDivider: View {
   public init(
     dividerColor: Color = .gray,
     handleColor: Color = .yellow,
+    dotColor: Color = .black,
     handleLength: Double = 32.0,
     handleWidth: Double = 12.0,
     paddingInsets: Double = 6.0
   ) {
     self.dividerColor = dividerColor
     self.handleColor = handleColor
+    self.dotColor = dotColor
     self.handleLength = handleLength
     self.handleWidth = handleWidth
     self.paddingInsets = paddingInsets
@@ -45,9 +48,9 @@ public struct HandleDivider: View {
           .padding(EdgeInsets(top: paddingInsets, leading: 0, bottom: paddingInsets, trailing: 0))
 
         VStack {
-          Color.black
+          Color(dotColor)
             .frame(width: 2, height: 2)
-          Color.black
+          Color(dotColor)
             .frame(width: 2, height: 2)
         }
 
@@ -66,9 +69,9 @@ public struct HandleDivider: View {
           .padding(EdgeInsets(top: 0, leading: paddingInsets, bottom: 0, trailing: paddingInsets))
 
         HStack {
-          Color.black
+          Color(dotColor)
             .frame(width: 2, height: 2)
-          Color.black
+          Color(dotColor)
             .frame(width: 2, height: 2)
         }
       }
