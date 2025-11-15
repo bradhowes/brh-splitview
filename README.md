@@ -24,13 +24,15 @@ public var body: some View {
 }
 ```
 
-Here is a demo view that contains a vertical split view with the lower child pane holding a horizontal split view. The
+Included in this repo is a [demo app](BRHSplitViewDemo/BRHSplitViewDemo) that runs on macOS and iOS. The app
+contains a vertical split view with the lower child pane holding a horizontal split view. The
 split view configurations enable dragging to close a child pane -- the horizontal split view allows it for both child
-panes, while the vertical orientation only allows it for the lower child pane. Here is a macOS rendering:
+panes, while the vertical orientation only allows it for the lower child pane. Inside each child view is a button that
+controls visibility of its sibling. Below is an animated image of the macOS version:
 
 ![](media/macOS.gif?raw=true)
 
-And below shows the iOS example:
+And below shows the app running on an iOS device:
 
 <img src="media/iOS.gif?raw=true" width="300">
 
