@@ -1,4 +1,4 @@
-PLATFORM_IOS = iOS Simulator,name=iPhone 16 Pro
+PLATFORM_IOS = iOS Simulator,name=iPad mini (A17 Pro)
 PLATFORM_MACOS = macOS
 SCHEME = brh-splitview
 XCCOV = xcrun xccov view --report --only-targets

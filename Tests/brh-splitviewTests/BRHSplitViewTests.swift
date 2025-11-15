@@ -201,8 +201,9 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
   @Test func horizontalPreviewOnlyPrimary() throws {
@@ -228,8 +229,9 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
   @Test func horizontalPreviewOnlySecondary() throws {
@@ -255,8 +257,9 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
   @Test func verticalPreview() throws {
@@ -265,8 +268,9 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
   @Test func verticalPreviewOnlyPrimary() throws {
@@ -292,8 +296,9 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
   @Test func verticalPreviewOnlySecondary() throws {
@@ -320,7 +325,9 @@ import Testing
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
 
-    assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
   }
 
   @Test func verticalPreviewHighlightPrimary() async throws {
@@ -351,10 +358,13 @@ import Testing
     store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: 0.0)))
     store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: -150.0)))
     #expect(store.highlightPane == .primary)
-    assertSnapshot(
-      of: view,
-      as: .image(traits: .init(userInterfaceStyle: .light))
-    )
+
+    withSnapshotTesting(record: .failed) {
+      assertSnapshot(
+        of: view,
+        as: .image(traits: .init(userInterfaceStyle: .light))
+      )
+    }
   }
 
   @Test func demoPreview() throws {
