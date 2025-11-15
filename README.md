@@ -72,7 +72,7 @@ The source currently contains three divider views:
 
 # Alternatives
 
-In a current project I was originally using [SplitView](https://github.com/stevengharris/SplitView) by
+In another project I was originally using [SplitView](https://github.com/stevengharris/SplitView) by
 [Steve Harris](https://github.com/stevengharris) which is very nice, but I opted to write my own after having some
 difficulty integrating it into my app that is based on TCA. My version adopts many of the same features, but it does
 have a hard dependency on TCA, so consider Steve's implementation if you are looking for a SwifUI-only version.
