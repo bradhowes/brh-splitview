@@ -12,8 +12,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Select Xcode Xcode_16.4
-      run: ls -l /Applications && sudo xcode-select -s /Applications/Xcode_16.4.app
+    - name: Select Xcode Xcode_26.1.1
+      run: ls -l /Applications && sudo xcode-select -s /Applications/Xcode_26.1.1.app
     - name: Skip macro validation
       run: defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
     - name: Build, test, and code coverage
