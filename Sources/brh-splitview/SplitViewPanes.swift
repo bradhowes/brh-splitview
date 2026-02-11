@@ -5,7 +5,10 @@
  and `secondary` is the other one. There are aliases for `left`, `right`, `top`, and `bottom` and
  definitions for `none` and `both`.
  */
-public struct SplitViewPanes: OptionSet, Sendable, Equatable {
+@available(*, deprecated, renamed: "SplitViewVisiblePanes")
+public typealias SplitViewPanes = SplitViewVisiblePanes
+
+public struct SplitViewVisiblePanes: OptionSet, Sendable, Equatable {
   public let rawValue: Int
 
   /**
@@ -18,13 +21,13 @@ public struct SplitViewPanes: OptionSet, Sendable, Equatable {
   }
 
   /// Constant to indicate no panes.
-  public static let none = SplitViewPanes([])
+  public static let none = Self([])
   /// Constant to indicate the primary pane.
-  public static let primary = SplitViewPanes(rawValue: 1 << 0)
+  public static let primary = Self(rawValue: 1 << 0)
   /// Constant to indicate the secondary pane.
-  public static let secondary = SplitViewPanes(rawValue: 1 << 1)
+  public static let secondary = Self(rawValue: 1 << 1)
   /// Constant to indicate both primary and secondary panes.
-  public static let both = SplitViewPanes(rawValue: primary.rawValue | secondary.rawValue)
+  public static let both = Self(rawValue: primary.rawValue | secondary.rawValue)
   /// Alias to the primary pane
   public static let left = primary
   /// Alias to the primary pane

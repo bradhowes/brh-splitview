@@ -9,29 +9,29 @@ import Testing
 
   @Test func defaultBoundsSetup() throws {
     let svc = SplitViewConfiguration(orientation: .horizontal)
-    #expect(svc.draggableRange == 0...1)
-    #expect(svc.dragBounds == 0...1)
+    #expect(svc.draggableRange == .normalized(0...1))
+    #expect(svc.dragBounds(for: 123) == svc.draggableRange.bounds(for: 123))
   }
 
   @Test(
     "Bounds honors dragToHidePanes",
     arguments: [
-      (SplitViewPanes.none, 0.3...0.8),
-      (SplitViewPanes.primary, 0.0...0.8),
-      (SplitViewPanes.secondary, 0.3...1.0),
-      (SplitViewPanes.both, 0.0...1.0),
+      (SplitViewVisiblePanes.none, 0.3...0.8),
+      (SplitViewVisiblePanes.primary, 0.0...0.8),
+      (SplitViewVisiblePanes.secondary, 0.3...1.0),
+      (SplitViewVisiblePanes.both, 0.0...1.0),
     ]
   )
-  func boundsHonorsDragToHidePanes(run: (SplitViewPanes, ClosedRange<Double>)) throws {
+  func boundsHonorsDragToHidePanes(run: (SplitViewVisiblePanes, ClosedRange<Double>)) throws {
     let svc = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.3...0.8,
+      draggableRange: .normalized(0.3...0.8),
       dragToHidePanes: run.0
     )
-    #expect(svc.draggableRange == 0.3...0.8)
-    #expect(svc.dragBounds == run.1)
-    #expect(svc.dragLowerBound == run.1.lowerBound)
-    #expect(svc.dragUpperBound == run.1.upperBound)
+    #expect(svc.draggableRange == .normalized(0.3...0.8))
+    #expect(svc.dragBounds(for: 123) == run.1)
+    #expect(svc.dragLowerBound(for: 123) == run.1.lowerBound)
+    #expect(svc.dragUpperBound(for: 123) == run.1.upperBound)
   }
 }
 
@@ -48,27 +48,27 @@ import Testing
 @Suite("SplitViewPanes") struct SplitViewPanesTests {
 
   @Test func testConditions() {
-    #expect(SplitViewPanes.none.primary == false)
-    #expect(SplitViewPanes.none.secondary == false)
-    #expect(SplitViewPanes.none.both == false)
+    #expect(SplitViewVisiblePanes.none.primary == false)
+    #expect(SplitViewVisiblePanes.none.secondary == false)
+    #expect(SplitViewVisiblePanes.none.both == false)
 
-    #expect(SplitViewPanes.primary.primary == true)
-    #expect(SplitViewPanes.primary.secondary == false)
-    #expect(SplitViewPanes.primary.both == false)
+    #expect(SplitViewVisiblePanes.primary.primary == true)
+    #expect(SplitViewVisiblePanes.primary.secondary == false)
+    #expect(SplitViewVisiblePanes.primary.both == false)
 
-    #expect(SplitViewPanes.secondary.primary == false)
-    #expect(SplitViewPanes.secondary.secondary == true)
-    #expect(SplitViewPanes.secondary.both == false)
+    #expect(SplitViewVisiblePanes.secondary.primary == false)
+    #expect(SplitViewVisiblePanes.secondary.secondary == true)
+    #expect(SplitViewVisiblePanes.secondary.both == false)
 
-    #expect(SplitViewPanes.both.primary == true)
-    #expect(SplitViewPanes.both.secondary == true)
-    #expect(SplitViewPanes.both.both == true)
+    #expect(SplitViewVisiblePanes.both.primary == true)
+    #expect(SplitViewVisiblePanes.both.secondary == true)
+    #expect(SplitViewVisiblePanes.both.both == true)
 
-    #expect(SplitViewPanes.primary == SplitViewPanes.left)
-    #expect(SplitViewPanes.primary == SplitViewPanes.top)
+    #expect(SplitViewVisiblePanes.primary == SplitViewVisiblePanes.left)
+    #expect(SplitViewVisiblePanes.primary == SplitViewVisiblePanes.top)
 
-    #expect(SplitViewPanes.secondary == SplitViewPanes.right)
-    #expect(SplitViewPanes.secondary == SplitViewPanes.bottom)
+    #expect(SplitViewVisiblePanes.secondary == SplitViewVisiblePanes.right)
+    #expect(SplitViewVisiblePanes.secondary == SplitViewVisiblePanes.bottom)
   }
 }
 
@@ -76,15 +76,15 @@ import Testing
 @Suite("SplitViewFeature") struct SplitViewFeatureTests {
 
   struct Run {
-    let doubleClickToClose: SplitViewPanes
-    let expected: SplitViewPanes
+    let doubleClickToClose: SplitViewVisiblePanes
+    let expected: SplitViewVisiblePanes
   }
 
   @Test("doubleClick does nothing")
   func testDoubleClickDoesNothing() async throws {
     let config = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.3...0.6,
+      draggableRange: .normalized(0.3...0.6),
       dragToHidePanes: .none, doubleClickToClose: .none, visibleDividerSpan: 4.0
     )
     let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
@@ -99,7 +99,7 @@ import Testing
   func testDoubleClickAction(run: Run) async throws {
     let config = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.3...0.6,
+      draggableRange: .normalized(0.3...0.6),
       dragToHidePanes: .none, doubleClickToClose: run.doubleClickToClose, visibleDividerSpan: 4.0
     )
     let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
@@ -111,23 +111,24 @@ import Testing
 
   @Test("drag is constrained")
   func dragDoesNothing() async throws {
+    let span = 100.0
     let config = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.3...0.6,
+      draggableRange: .normalized(0.3...0.6),
       dragToHidePanes: .none, doubleClickToClose: .none, visibleDividerSpan: 4.0
     )
     let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 0.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: 0.0))) {
       $0.initialPosition = 50.0
       $0.lastPosition = 0.5
     }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: -50.0))) {
-      $0.position = config.draggableRange.lowerBound
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: -50.0))) {
+      $0.position = config.draggableRange.lowerBound(for: span)
     }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 100.0))) {
-      $0.position = config.draggableRange.upperBound
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: 100.0))) {
+      $0.position = config.draggableRange.upperBound(for: span)
     }
-    await store.send(.dragOnEnded(config: config)) {
+    await store.send(.dragOnEnded(dragState: .init(config: config, span: span, change: 0.0))) {
       $0.initialPosition = nil
     }
     await store.receive(.delegate(.stateChanged(panesVisible: .both, position: 0.6)))
@@ -135,25 +136,26 @@ import Testing
 
   @Test("drag will hide secondary")
   func dragWillHideSecondary() async throws {
+    let span = 100.0
     let config = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.3...0.6,
+      draggableRange: .normalized(0.3...0.6),
       dragToHidePanes: .secondary, doubleClickToClose: .none, visibleDividerSpan: 4.0
     )
     let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 0.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: 0.0))) {
       $0.initialPosition = 50.0
       $0.lastPosition = 0.5
     }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: -40.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: -40.0))) {
       $0.lastPosition = 0.5
-      $0.position = config.draggableRange.lowerBound
+      $0.position = config.draggableRange.lowerBound(for: span)
     }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 40.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: 40.0))) {
       $0.position = 0.9
       $0.highlightPane = .secondary
     }
-    await store.send(.dragOnEnded(config: config)) {
+    await store.send(.dragOnEnded(dragState: .init(config: config, span: span, change: 0.0))) {
       $0.position = 0.5
       $0.panesVisible = .primary
       $0.highlightPane = .none
@@ -165,25 +167,26 @@ import Testing
 
   @Test("drag will hide primary")
   func dragWillHidePrimary() async throws {
+    let span = 100.0
     let config = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.3...0.6,
+      draggableRange: .normalized(0.3...0.6),
       dragToHidePanes: .primary, doubleClickToClose: .none, visibleDividerSpan: 4.0
     )
     let store = TestStore(initialState: SplitViewReducer.State()) { SplitViewReducer() }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 0.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: 0.0))) {
       $0.initialPosition = 50.0
       $0.lastPosition = 0.5
     }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: 40.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: 40.0))) {
       $0.lastPosition = 0.5
       $0.position = 0.6
     }
-    await store.send(.dragOnChanged(dragState: .init(config: config, span: 100, change: -40.0))) {
+    await store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: -40.0))) {
       $0.position = 0.1
       $0.highlightPane = .primary
     }
-    await store.send(.dragOnEnded(config: config)) {
+    await store.send(.dragOnEnded(dragState: .init(config: config, span: span, change: 0.0))) {
       $0.position = 0.5
       $0.panesVisible = .secondary
       $0.highlightPane = .none
@@ -224,7 +227,7 @@ import Testing
       ).splitViewConfiguration(
         .init(
           orientation: .horizontal,
-          draggableRange: 0.1...0.9
+          draggableRange: .normalized(0.1...0.9)
         ))
     }.frame(width: 500, height: 500)
       .background(Color.white)
@@ -252,7 +255,7 @@ import Testing
       ).splitViewConfiguration(
         .init(
           orientation: .horizontal,
-          draggableRange: 0.1...0.9
+          draggableRange: .normalized(0.1...0.9)
         ))
     }.frame(width: 500, height: 500)
       .background(Color.white)
@@ -291,7 +294,7 @@ import Testing
       ).splitViewConfiguration(
         .init(
           orientation: .vertical,
-          draggableRange: 0.1...0.9
+          draggableRange: .normalized(0.1...0.9)
         ))
     }.frame(width: 500, height: 500)
       .background(Color.white)
@@ -319,7 +322,7 @@ import Testing
       ).splitViewConfiguration(
         .init(
           orientation: .horizontal,
-          draggableRange: 0.1...0.9
+          draggableRange: .normalized(0.1...0.9)
         ))
     }.frame(width: 500, height: 500)
       .background(Color.white)
@@ -333,7 +336,7 @@ import Testing
   @Test func verticalPreviewHighlightPrimary() async throws {
     let config = SplitViewConfiguration(
       orientation: .horizontal,
-      draggableRange: 0.4...0.6,
+      draggableRange: .normalized(0.4...0.6),
       dragToHidePanes: .both
     )
 
