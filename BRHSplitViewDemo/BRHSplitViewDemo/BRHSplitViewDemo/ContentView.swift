@@ -36,7 +36,7 @@ private struct DemoHSplit: View {
     }
   }
 
-  private func button(_ side: String, pane: SplitViewPanes) -> some View {
+  private func button(_ side: String, pane: SplitViewVisiblePanes) -> some View {
     Button {
       store.send(.updatePanesVisibility(store.panesVisible.both ? pane : .both))
     } label: {
@@ -122,7 +122,7 @@ private struct DemoVSplit: View {
     }
   }
 
-  private func button(_ side: String, pane: SplitViewPanes) -> some View {
+  private func button(_ side: String, pane: SplitViewVisiblePanes) -> some View {
     Button {
       store.send(.updatePanesVisibility(store.panesVisible.both ? pane : .both))
     } label: {
