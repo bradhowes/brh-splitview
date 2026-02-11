@@ -9,20 +9,20 @@ public struct SplitViewReducer {
   @ObservableState
   public struct State: Equatable {
     /// The currently visible child panes
-    public var panesVisible: SplitViewPanes
-    /// The normalized position of the divider [0.0-1.0] where 0.0 is all the way to the left/up, and 1.0 is all the
+    public var panesVisible: SplitViewVisiblePanes
+    /// The **normalized** position of the divider [0.0-1.0] where 0.0 is all the way to the left/up, and 1.0 is all the
     /// way to the right/down
     public var position: Double
     /// Any child pane to blur while dragging to signal that the child pane will close if dragging is
     /// stopped at the current position.
-    public var highlightPane: SplitViewPanes = []
-    /// Initial position of a drag gesture
+    public var highlightPane: SplitViewVisiblePanes = []
+    /// Initial position of a drag gesture (unnormalized)
     @ObservationStateIgnored public var initialPosition: Double?
-    /// The last position before the start of a drag gesture.
+    /// The last (normalized) position before the start of a drag gesture.
     @ObservationStateIgnored public var lastPosition: Double = .zero
 
     public init(
-      panesVisible: SplitViewPanes = .both,
+      panesVisible: SplitViewVisiblePanes = .both,
       initialPosition: Double = 0.5
     ) {
       self.panesVisible = panesVisible
@@ -40,11 +40,11 @@ public struct SplitViewReducer {
     case delegate(Delegate)
     case doubleClicked(config: SplitViewConfiguration)
     case dragOnChanged(dragState: DragState)
-    case dragOnEnded(config: SplitViewConfiguration)
-    case updatePanesVisibility(SplitViewPanes)
+    case dragOnEnded(dragState: DragState)
+    case updatePanesVisibility(SplitViewVisiblePanes)
 
     public enum Delegate: Equatable {
-      case stateChanged(panesVisible: SplitViewPanes, position: Double)
+      case stateChanged(panesVisible: SplitViewVisiblePanes, position: Double)
     }
   }
 
@@ -56,11 +56,14 @@ public struct SplitViewReducer {
       case .delegate: return .none
       case let .doubleClicked(config): return doubleClicked(&state, config: config)
       case let .dragOnChanged(dragState): return dragOnChanged(&state, dragState: dragState)
-      case let .dragOnEnded(config): return dragOnEnded(&state, config: config)
+      case let .dragOnEnded(dragState): return dragOnEnded(&state, dragState: dragState)
       case let .updatePanesVisibility(visible): return updateVisiblePanes(&state, panes: visible)
       }
     }
   }
+}
+
+extension SplitViewReducer {
 
   private func doubleClicked(_ state: inout State, config: SplitViewConfiguration) -> Effect<Action> {
     if config.doubleClickToClose.contains(.secondary) {
@@ -76,11 +79,12 @@ public struct SplitViewReducer {
       // Calculate new normalized position [0.0-1.0] of the divider
       let unconstrained = (initialPosition + dragState.change).normalize(in: 0...dragState.span)
       // Constrain the above so that it obeys the configured constraints
-      let position = unconstrained.clamped(to: dragState.config.dragBounds)
-      if position < dragState.config.draggableRange.lowerBound {
+      let position = unconstrained.clamped(to: dragState.config.dragBounds(for: dragState.span))
+      // Now check if closing the primary pan
+      if position < dragState.config.draggableRange.lowerBound(for: dragState.span) {
         // Highlight the primary pane will be closed if the drag ends
         state.highlightPane = .primary
-      } else if position > dragState.config.draggableRange.upperBound {
+      } else if position > dragState.config.draggableRange.upperBound(for: dragState.span) {
         // Highlight the secondary pane will be closed if the drag ends
         state.highlightPane = .secondary
       } else {
@@ -94,19 +98,20 @@ public struct SplitViewReducer {
     return .none
   }
 
-  private func dragOnEnded(_ state: inout State, config: SplitViewConfiguration) -> Effect<Action> {
+  private func dragOnEnded(_ state: inout State, dragState: DragState) -> Effect<Action> {
     state.initialPosition = nil
     state.highlightPane = []
-    if state.position < config.draggableRange.lowerBound {
+    let bounds = dragState.config.draggableRange.bounds(for: dragState.span)
+    if state.position < bounds.lowerBound {
       return updatePosition(&state, position: state.lastPosition, panes: .secondary)
-    } else if state.position > config.draggableRange.upperBound {
+    } else if state.position > bounds.upperBound {
       return updatePosition(&state, position: state.lastPosition, panes: .primary)
     } else {
-      return updatePosition(&state, position: state.position.clamped(to: config.draggableRange), panes: .both)
+      return updatePosition(&state, position: state.position, panes: .both)
     }
   }
 
-  private func updatePosition(_ state: inout State, position: Double, panes: SplitViewPanes) -> Effect<Action> {
+  private func updatePosition(_ state: inout State, position: Double, panes: SplitViewVisiblePanes) -> Effect<Action> {
     state.position = position
     if state.panesVisible == panes {
       return .send(.delegate(.stateChanged(panesVisible: panes, position: state.position)))
@@ -115,7 +120,7 @@ public struct SplitViewReducer {
     }
   }
 
-  private func updateVisiblePanes(_ state: inout State, panes: SplitViewPanes) -> Effect<Action> {
+  private func updateVisiblePanes(_ state: inout State, panes: SplitViewVisiblePanes) -> Effect<Action> {
     guard state.panesVisible != panes else { return .none }
     state.panesVisible = panes
     return .send(.delegate(.stateChanged(panesVisible: panes, position: state.position)))
@@ -135,8 +140,8 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
   @Environment(\.splitViewConfiguration) private var config
 
   private var orientation: SplitViewOrientation { config.orientation }
-  private var panesVisible: SplitViewPanes { store.panesVisible }
-  private var highlightSide: SplitViewPanes { store.highlightPane }
+  private var panesVisible: SplitViewVisiblePanes { store.panesVisible }
+  private var highlightSide: SplitViewVisiblePanes { store.highlightPane }
 
   public init(
     store: StoreOf<SplitViewReducer>,
@@ -230,7 +235,7 @@ extension SplitView {
         store.send(.dragOnChanged(dragState: .init(config: config, span: span, change: gesture[keyPath: change])))
       }
       .onEnded { _ in
-        store.send(.dragOnEnded(config: config))
+        store.send(.dragOnEnded(dragState: .init(config: config, span: span, change: 0.0)))
       }
   }
 }
@@ -260,7 +265,7 @@ private struct DemoHSplit: View {
     }
   }
 
-  private func button(_ side: String, pane: SplitViewPanes) -> some View {
+  private func button(_ side: String, pane: SplitViewVisiblePanes) -> some View {
     Button {
       store.send(.updatePanesVisibility(store.panesVisible.both ? pane : .both))
     } label: {
@@ -296,7 +301,7 @@ private struct DemoVSplit: View {
             .splitViewConfiguration(
               .init(
                 orientation: .horizontal,
-                draggableRange: 0.3...0.7,
+                draggableRange: .normalized(0.3...0.7),
                 dragToHidePanes: .both,
                 doubleClickToClose: .left,
                 visibleDividerSpan: 4
@@ -307,7 +312,7 @@ private struct DemoVSplit: View {
       }.splitViewConfiguration(
         .init(
           orientation: .vertical,
-          draggableRange: 0.3...0.7,
+          draggableRange: .normalized(0.3...0.7),
           dragToHidePanes: .bottom,
           doubleClickToClose: .bottom,
           visibleDividerSpan: 4
@@ -346,7 +351,7 @@ private struct DemoVSplit: View {
     }
   }
 
-  private func button(_ side: String, pane: SplitViewPanes) -> some View {
+  private func button(_ side: String, pane: SplitViewVisiblePanes) -> some View {
     Button {
       store.send(.updatePanesVisibility(store.panesVisible.both ? pane : .both))
     } label: {
@@ -376,7 +381,7 @@ internal struct SplitViewPreviews {
     ).splitViewConfiguration(
       .init(
         orientation: .horizontal,
-        draggableRange: 0.3...0.7,
+        draggableRange: .fixedLength(lowerSpan: 100, upperSpan: 50),
         dragToHidePanes: .both
       ))
   }
@@ -399,7 +404,7 @@ internal struct SplitViewPreviews {
     ).splitViewConfiguration(
       .init(
         orientation: .vertical,
-        draggableRange: 0.1...0.9
+        draggableRange: .fixedLength(lowerSpan: 60, upperSpan: 200)
       ))
   }
 
