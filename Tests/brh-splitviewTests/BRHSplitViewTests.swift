@@ -203,8 +203,8 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -231,8 +231,8 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -259,8 +259,8 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -271,7 +271,7 @@ import Testing
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
     withSnapshotTesting(record: .failed) {
-      assertSnapshot(of: view, as: .image(traits: .init(userInterfaceStyle: .light)))
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -298,8 +298,8 @@ import Testing
     }.frame(width: 500, height: 500)
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -327,8 +327,8 @@ import Testing
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
 
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -361,8 +361,8 @@ import Testing
     store.send(.dragOnChanged(dragState: .init(config: config, span: 500, change: -150.0)))
     #expect(store.highlightPane == .primary)
 
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 
@@ -373,8 +373,8 @@ import Testing
       .background(Color.white)
       .environment(\.colorScheme, ColorScheme.light)
 
-    try withSnapshotTesting(record: .failed) {
-      try TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
+    withSnapshotTesting(record: .failed) {
+      TestSupport.assertSnapshot(matching: view, size: .init(width: 500, height: 500))
     }
   }
 

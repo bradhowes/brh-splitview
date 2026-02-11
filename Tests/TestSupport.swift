@@ -24,7 +24,7 @@ extension TestSupport {
     testName: StaticString = #function,
     line: Int = #line,
     col: Int = #column
-  ) throws {
+  ) {
     let uniqueTestName = makeUniqueSnapshotName(testName)
     //    for (key, value) in ProcessInfo.processInfo.environment {
     //      log.info("environment[\(key)]: \(value)")
