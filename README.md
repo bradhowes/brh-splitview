@@ -61,6 +61,12 @@ child pane.
 * visibleDividerSpan (Double) -- the width or height of the divider. Dividers can draw outside of this span, including 
   defining a bigger area for touch tracking.
 
+Since v1.1, `draggableRange` now takes a `DraggableRangeType` which has two cases: `.normalized` for the existing way of specifying
+a drag bounds, and a `.fixedLength` case that holds two span values (eg. `.fixedLength(100, 100)`) that provides a boundary limit
+in pixels. These values will be converted into normalized values during drag operations by dividing them by the view's span value.
+This allows for better drag behavior under multiple device sizes when the limits an better be expressed in terms of pixels rather
+than as a percentage of a view's dimension.
+
 # Divider Examples
 
 The source currently contains three divider views:
