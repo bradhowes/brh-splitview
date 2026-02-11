@@ -2,6 +2,10 @@ import SnapshotTesting
 import SwiftUI
 import Testing
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 public enum TestSupport {}
 
 extension TestSupport {
@@ -42,6 +46,8 @@ extension TestSupport {
       matching
     }
 
+#if os(iOS)
+
     if let result = SnapshotTesting.verifySnapshot(
       of: view,
       as: .image(
@@ -68,6 +74,9 @@ extension TestSupport {
         )
       }
     }
+
+#endif
+
   }
 }
 
@@ -121,6 +130,8 @@ extension TestSupport.SnapshotConfig {
     }
   }
 
+#if os(iOS)
+
   private func sharedTraits(_ mutations: inout UIMutableTraits) {
     mutations.layoutDirection = .leftToRight
     mutations.preferredContentSizeCategory = .medium
@@ -154,4 +165,7 @@ extension TestSupport.SnapshotConfig {
     )
     }
   }
+
+#endif
+
 }
