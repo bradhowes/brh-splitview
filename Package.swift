@@ -9,8 +9,8 @@ let package = Package(
     .library(name: "BRHSplitView", targets: ["BRHSplitView"])
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.19.0"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.18.0"),
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.25.4"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.19.2"),
   ],
   targets: [
     .target(
