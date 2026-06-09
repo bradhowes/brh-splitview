@@ -42,7 +42,9 @@ private struct DemoHSplit: View {
     } label: {
       Text(store.panesVisible.both ? "Hide \(side)" : "Show \(side)")
         .foregroundStyle(Color.blue)
+        .contentTransition(.interpolate)
     }
+    .drawingGroup()
   }
 }
 
@@ -128,7 +130,9 @@ private struct DemoVSplit: View {
     } label: {
       Text(store.panesVisible.both ? "Hide \(side)" : "Show \(side)")
         .foregroundStyle(Color.blue)
+        .contentTransition(.interpolate)
     }
+    .drawingGroup()
   }
 }
 

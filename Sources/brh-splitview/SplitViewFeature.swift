@@ -156,7 +156,7 @@ public struct SplitView<P, D, S>: View where P: View, D: View, S: View {
   }
 
   public var body: some View {
-    // let _ = Self._printChanges()
+
     GeometryReader { geometry in
       let size = geometry.size
       let width = size.width
@@ -271,7 +271,9 @@ private struct DemoHSplit: View {
     } label: {
       Text(store.panesVisible.both ? "Hide \(side)" : "Show \(side)")
         .foregroundStyle(Color.blue)
+        .contentTransition(.interpolate)
     }
+    .drawingGroup()
   }
 }
 
@@ -324,30 +326,27 @@ private struct DemoVSplit: View {
         } label: {
           Text("Top")
             .foregroundStyle(store.panesVisible.primary ? Color.accentColor : Color.orange)
-            .animation(.smooth, value: store.panesVisible)
         }
         Button {
           store.send(.updatePanesVisibility(store.panesVisible.both ? .primary : .both))
         } label: {
           Text("Bottom")
             .foregroundStyle(store.panesVisible.secondary ? Color.accentColor : Color.orange)
-            .animation(.smooth, value: store.panesVisible)
         }
         Button {
           inner.send(.updatePanesVisibility(inner.panesVisible.both ? .secondary : .both))
         } label: {
           Text("Left")
             .foregroundStyle(inner.panesVisible.primary ? Color.accentColor : Color.orange)
-            .animation(.smooth, value: store.panesVisible)
         }
         Button {
           inner.send(.updatePanesVisibility(inner.panesVisible.both ? .primary : .both))
         } label: {
           Text("Right")
             .foregroundStyle(inner.panesVisible.secondary ? Color.accentColor : Color.orange)
-            .animation(.smooth, value: store.panesVisible)
         }
-      }.padding([.bottom], 8)
+      }
+      .padding([.bottom], 8)
     }
   }
 
@@ -357,7 +356,9 @@ private struct DemoVSplit: View {
     } label: {
       Text(store.panesVisible.both ? "Hide \(side)" : "Show \(side)")
         .foregroundStyle(Color.blue)
+        .contentTransition(.interpolate)
     }
+    .drawingGroup()
   }
 }
 
